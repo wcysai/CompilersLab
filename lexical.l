@@ -9,11 +9,16 @@ letter [_a-zA-Z]
 ID {letter}({letter}|{digit})+
 DECIMAL_INT {non_zero_digit}{digit}+
 OCTONARY_INT 0{non_zero_octonary_digit}{octonary_digit}+
-HEXADECIMAL_INT [0x|0X]{non_zero_hexadecimal_digit}{hexadecimal_digit}+
+HEXADECIMAL_INT (0x|0X){non_zero_hexadecimal_digit}{hexadecimal_digit}+
 INT {DECIMAL_INT}|{OCTONARY_INT}|{HEXADECIMAL_INT}
 EXPONENTIAL_FORM [E|e][+|-]?{digit}+
 FLOAT {digit}*\.[0-9]+|{digit}*\.{EXPONENTIAL_FORM}
 LZ 0+{INT}
+LINE_COMMENT \/\/
+BLOCK_COMMENT_START \/\*
+BLOCK_COMMENT_END \*\/
+COMMENTED_LINE {LINE_COMMENT}.*
+COMMENTED_BLOCK {BLOCK_COMMENT_START}([^*]|(\*+[^*/]))*{BLOCK_COMMENT_END}
 SEMI ;
 COMMA ,
 ASSIGNOP =
@@ -45,13 +50,12 @@ OTHERWISE .
 {INT} {
     if(strncmp(yytext,"0x",2)==0) printf("hexadicmal digit\n");
     else if(strncmp(yytext,"0",1)==0) printf("octonary digit\n");
-    else printf("deciaml digit\n"); 
+    else printf("decimal digit\n"); 
     }
-{LZ} {puts("leading zeroes detected");}
-{SEMI} {puts("semi");}
-{STAR} {puts("STAR");}
-{DIV} {puts("DIV");}
-{OR} {puts("OR");}
+{LZ} {printf("Error type A at Line %d: illegal leading zeroes detected",yylineno);}
+{FLOAT} {printf("floating number\n");}
+{COMMENTED_LINE} {printf("commented line");}
+{COMMENTED_BLOCK} {printf("commented block");}
 {OTHERWISE} {printf("Error type A at Line %d: Mysterious characters \'%s\'\n",yylineno,yytext);}
 %%
 int yywrap() {return 1;}
