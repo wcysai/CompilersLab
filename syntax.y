@@ -1,11 +1,39 @@
 %{
     #include<stdio.h>
 %}
+/* types */
+%union
+{
+    int type_int;
+    float type_float;
+}
 
-/* declared tokens */
-%token INT
+/* tokens */
+%token <type_int> INT 
+%token <type_float> FLOAT 
+%token ID
 %token ADD SUB MUL DIV
+%token SEMI COMMA
+%token ASSIGNOP
+%token LE GE LEQ GEQ EQ NEQ
+%token PLUS MINUS STAR DIV
+%token AND OR
+%token DOT NOT
+%token TYPE
+%token LP RP LB RB LC RC
+%token STRUCT RETURN IF ELSE WHILE 
 %%
+Program: ExtDefList
+    ;
+ExtDefList: ExtDef ExtDefList
+    |
+    ;
+ExtDef: Specifier ExtDecList SEMI
+    | Specifier SEMI
+    | Specifier FunDec CopmSt
+    ;
+ExtDecList: VarDec
+    | VarDec COMMA ExtDecList
 Specifier: TYPE
     | StructSpecifier
     ;
@@ -51,8 +79,8 @@ Dec: VarDec
     | VarDec ASSIGNOP Exp
 
 Exp: ID
-    | INT
-    | FLOAT
+    | INT {$$=$1;}
+    | FLOAT {$$=$1;}
     | Exp ASSIGNOP Exp {$$=($1==$3);}
     | Exp AND Exp {$$=($1&&$3);}
     | Exp OR Exp {$$=($1||$3);}
