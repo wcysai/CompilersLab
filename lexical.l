@@ -1,6 +1,12 @@
 %{
     #include<math.h>
     #include "syntax.tab.h"
+    int yycolumn=1;
+#define YY_USER_ACTION\
+    yylloc.first_line=yylloc.last_line=yylino;\
+    yylloc.first_column=yycolumn;\
+    yylloc.last_colimn=yycolumn+yyleng-1;\
+    yycolumn+=yyleng;
 %}
 %option noyywrap nodefault yylineno
 octonary_digit [0-7]
@@ -59,7 +65,7 @@ OTHERWISE .
 NEWLINE \n
 %%
 {WHITESPACE} {}
-{NEWLINE} {}
+{NEWLINE} {yycolumn=1;}
 {SEMI} {return SEMI;}
 {COMMA} {return COMMA;}
 {LE} {return LE;}

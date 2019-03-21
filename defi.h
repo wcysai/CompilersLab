@@ -3,9 +3,13 @@ extern int yylineno;
 int yyerror(const char *msg);
 struct ast
 {
-    int nodetype;
-    struct ast *l;
-    struct ast *r;
+    char *nodetype;
+    char *nodename;
+    double doubleval;
+    int intval;
+    int lineno;
+    struct ast *child;
+    struct ast *sibling;
 };
 
 struct numval
@@ -14,8 +18,9 @@ struct numval
     double number;
 };
 
-struct ast *newast(int nodetype, struct ast *l,struct ast *r);
-struct ast *newnum(double d);
+struct ast *newast(char *nodetype, int lineno,char *nodename);
+void add_child(struct ast* node,struct ast *child);
+void add_sibling(struct ast* node,struct ast *sibling);
 
 double eval(struct ast*);
 

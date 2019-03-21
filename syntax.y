@@ -9,7 +9,6 @@
 %union
 {
     struct ast *a;
-    double d;
 }
 %type <a> Exp 
 %type <a> INT FLOAT
@@ -91,10 +90,22 @@ DecList: Dec
 Dec: VarDec
     | VarDec ASSIGNOP Exp
 
-Exp: ID {$$=newast(ID,NULL,NULL);}
-    | INT {$$=newast(INT,NULL,NULL);}
-    | FLOAT {$$=newast(FLOAT,NULL,NULL);}
-    | Exp ASSIGNOP Exp {$$=newast(ASSIGNOP,$1,$3);}
+Exp: ID {
+        $$=newast("ID")
+        $$->nodetype="ID";
+    }
+    | INT  {
+        $$=$1; $$->lineno=@$.first_line;
+        $$->nodetype="INT";
+    }
+    | FLOAT {
+        $$=$1; $$.lineno=@$.first_line;
+        $$->nodetype="FLOAT";
+    } 
+    | Exp ASSIGNOP Exp {
+        $$=newast("ASSIGNOP",@$.first_line,""); 
+        add_child($$,$1); add_sibling($1,$2);
+    }
     | Exp AND Exp {$$=newast(AND,$1,$3);}
     | Exp OR Exp {$$=newast(OR,$1,$3);}
     | Exp LE Exp {$$=newast(LE,$1,$3);}
