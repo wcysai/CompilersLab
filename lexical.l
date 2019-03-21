@@ -66,15 +66,15 @@ NEWLINE \n
 %%
 {WHITESPACE} {}
 {NEWLINE} {yycolumn=1;}
-{SEMI} {return SEMI;}
-{COMMA} {return COMMA;}
-{LE} {return LE;}
-{GE} {return GE;}
-{LEQ} {return LEQ;}
-{GEQ} {return GEQ;}
-{EQ} {return EQ;}
-{NEQ} {return NEQ;}
-{ASSIGNOP} {puts("ASSIGNOP"); return ASSIGNOP;}
+{SEMI} {   yylval->nodetype="SEMI"; return SEMI;}
+{COMMA} {yylval->nodetype="COMMA"; return COMMA; }
+{LE} { yylval->nodetype="LE" ;return LE;}
+{GE} { yylval->nodetype="GE"; return GE; }
+{LEQ} {yylval->nodetype="LEQ"; return LEQ; }
+{GEQ} {yylval->nodetype="GEQ"; return GEQ; }
+{EQ} {  yylval->nodetype="EQ"; return EQ;}
+{NEQ} {yylval->nodetype="NEQ"; return NEQ; }
+{ASSIGNOP} {yylval->nodetype="ASSIGNOP"; return ASSIGNOP;}
 {PLUS} {return PLUS;}
 {MINUS} {return MINUS;}
 {STAR} {return STAR;}

@@ -6,18 +6,15 @@
     #include"lex.yy.c"
 %}
 /* types */
-%union
-{
-    struct ast *a;
-}
-%type <a> Exp 
+%define api.value.type {struct ast*}
+/*%type <a> Exp 
 %type <a> Program ExtDefList ExtDef ExtDecList
 %type <a> Specifier StructSpecifier Tag OptTag VarDec FunDec
 %type <a> VarList ParamDec CompSt StmtList Stmt
 %type <a> DefList Def DecList Dec
 
 %type <a> INT FLOAT ID TYPE
-%type <a> STRUCT RETURN IF ELSE WHILE
+%type <a> STRUCT RETURN IF ELSE WHILE */
 /* tokens */
 %token ID
 %token INT FLOAT

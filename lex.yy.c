@@ -859,7 +859,7 @@ YY_RULE_SETUP
 case 3:
 YY_RULE_SETUP
 #line 69 "./lexical.l"
-{return SEMI;}
+{ return SEMI; yylval->nodetype="SEMI";}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
