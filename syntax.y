@@ -1,18 +1,14 @@
 %{
     #include<stdio.h>
+    #include<math.h>
+    #include<stdbool.h>
+    #include"lex.yy.c"
 %}
 /* types */
-%union
-{
-    int type_int;
-    float type_float;
-}
 
 /* tokens */
-%token <type_int> INT 
-%token <type_float> FLOAT 
 %token ID
-%token ADD SUB MUL DIV
+%token INT FLOAT
 %token SEMI COMMA
 %token ASSIGNOP
 %token LE GE LEQ GEQ EQ NEQ
@@ -22,6 +18,16 @@
 %token TYPE
 %token LP RP LB RB LC RC
 %token STRUCT RETURN IF ELSE WHILE 
+%right ASSIGNOP
+%left OR
+%left AND
+%left LE GE LEQ GEQ EQ NEQ
+%left PLUS MINUS
+%left STAR DIV
+%right NOT UMINUS
+%left LP RP LB RB DOT
+%nonassoc LOWER_THAN_ELSE
+%nonassoc ELSE
 %%
 Program: ExtDefList
     ;
@@ -30,14 +36,14 @@ ExtDefList: ExtDef ExtDefList
     ;
 ExtDef: Specifier ExtDecList SEMI
     | Specifier SEMI
-    | Specifier FunDec CopmSt
+    | Specifier FunDec CompSt
     ;
 ExtDecList: VarDec
     | VarDec COMMA ExtDecList
 Specifier: TYPE
     | StructSpecifier
     ;
-StructSpecifier: STRUCT OptTag LC DefList
+StructSpecifier: STRUCT OptTag LC DefList RC
     | STRUCT Tag
     ;
 OptTag: ID
@@ -64,7 +70,7 @@ StmtList: Stmt StmtList
 Stmt: Exp SEMI
     | CompSt
     | RETURN Exp SEMI
-    | IF LP Exp RP Stmt
+    | IF LP Exp RP Stmt %prec LOWER_THAN_ELSE
     | IF LP Exp RP Stmt ELSE Stmt
     | WHILE LP Exp RP Stmt
 DefList: Def DefList
@@ -95,7 +101,7 @@ Exp: ID
     | Exp STAR Exp {$$=$1*$3;}
     | Exp DIV Exp {$$=$1/$3;}
     | LP Exp RP {$$=$2;}
-    | MINUS Exp {$$=-$2;}
+    | MINUS Exp {$$=-$2;} %prec UMINUS
     | NOT Exp {$$=!$2;}
     | ID LP Args RP
     | ID LP RP
@@ -106,12 +112,16 @@ Args: Exp COMMA Args
     | Exp
     ;
 %%
-#include"lex.yy.c"
-int main()
+int main(int argc, char** argv)
 {
+    if(argc<=1) return 1;
+    FILE* f=fopen(argv[1],"r");
+    if(!f)
+    {
+        perror(argv[1]);
+        return 1;
+    }
+    yyrestart(f);
     yyparse();
 }
-yyerror(char *msg)
-{
-    fprintf(stderr,"error: %s\n",msg);
-}
+

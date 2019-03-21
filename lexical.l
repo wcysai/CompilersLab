@@ -1,5 +1,6 @@
 %{
     #include<math.h>
+    #include "syntax.tab.h"
 %}
 octonary_digit [0-7]
 non_zero_octonary_digit [1-7]
@@ -23,11 +24,17 @@ BLOCK_COMMENT_START \/\*
 BLOCK_COMMENT_END \*\/
 COMMENTED_LINE {LINE_COMMENT}.*
 COMMENTED_BLOCK {BLOCK_COMMENT_START}([^*]|(\*+[^*/]))*{BLOCK_COMMENT_END}
+WHITESPACE [ \t]
 SEMI ;
 COMMA ,
 ASSIGNOP =
-RELOP > | < | >= | <= | == | !=
-PLUS +
+LE <
+GE >
+LEQ <=
+GEQ >=
+EQ ==
+NEQ !=
+PLUS \+
 MINUS -
 STAR \*
 DIV \/
@@ -36,12 +43,12 @@ OR \|\|
 DOT \.
 NOT !
 TYPE (int|float)\ +
-LP (
-RP )
-LB [
-RB ]
-LC {
-RC }
+LP "("
+RP ")"
+LB "["
+RB "]"
+LC "{"
+RC "}"
 STRUCT struct
 RETURN return
 IF if
@@ -49,8 +56,37 @@ ELSE else
 WHILE while
 OTHERWISE .
 %%
-{TYPE} {printf("TYPE: %s\n",yytext);}
-{ID} {printf("ID: %s\n",yytext);}
+{WHITESPACE} {}
+{SEMI} {return SEMI;}
+{COMMA} {return COMMA;}
+{LE} {return LE;}
+{GE} {return GE;}
+{LEQ} {return LEQ;}
+{GEQ} {return GEQ;}
+{EQ} {return EQ;}
+{NEQ} {return NEQ;}
+{ASSIGNOP} {return ASSIGNOP;}
+{PLUS} {return PLUS;}
+{MINUS} {return MINUS;}
+{STAR} {return STAR;}
+{DIV} {return DIV;}
+{AND} {return AND;}
+{OR} {return OR;}
+{DOT} {return DOT;}
+{NOT} {return NOT;}
+{LP} {return LP;}
+{RP} {return RP;}
+{LB} {return LB;}
+{RB} {return RB;}
+{LC} {return LC;}
+{RC} {return RC;}
+{STRUCT} {return STRUCT;}
+{RETURN} {return RETURN;}
+{IF} {return IF;}
+{ELSE} {return ELSE;}
+{WHILE} {return WHILE;}
+{TYPE} {printf("TYPE: %s\n",yytext); return TYPE;}
+{ID} {printf("ID: %s\n",yytext); return ID;}
 {INT} {
     if(strncmp(yytext,"0x",2)==0)
     {
@@ -63,6 +99,7 @@ OTHERWISE .
             else x=x*16+(10+*yytext-'A');
             yytext++;
         }
+        yylval=x;
         printf("INT: %d\n",x);
     }
     else if(strncmp(yytext,"0",1)==0) 
@@ -125,9 +162,9 @@ OTHERWISE .
 {OTHERWISE} {printf("Error type A at Line %d: Mysterious characters \'%s\'\n",yylineno,yytext);}
 %%
 int yywrap() {return 1;}
-
-int main()
+int yyerror(const char *msg) 
 {
-    while(yylex());
+    fprintf(stderr, "Error: %s\n", msg);
     return 0;
 }
+
