@@ -859,7 +859,7 @@ YY_RULE_SETUP
 case 3:
 YY_RULE_SETUP
 #line 69 "./lexical.l"
-{ return SEMI; yylval->nodetype="SEMI";}
+{ return SEMI;}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
@@ -899,7 +899,7 @@ YY_RULE_SETUP
 case 11:
 YY_RULE_SETUP
 #line 77 "./lexical.l"
-{puts("ASSIGNOP"); return ASSIGNOP;}
+{return ASSIGNOP;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
@@ -999,20 +999,21 @@ YY_RULE_SETUP
 case 31:
 YY_RULE_SETUP
 #line 97 "./lexical.l"
-{printf("TYPE: %s\n",yytext); return TYPE;}
+{if(yytext[0]=='i') yylval->nodename="int"; else yylval->nodename="float"; return TYPE;}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
 #line 98 "./lexical.l"
-{printf("ID: %s\n",yytext); return ID;}
+{yylval->nodename=yytext; return ID;}
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
 #line 99 "./lexical.l"
 {
+    int x;
     if(strncmp(yytext,"0x",2)==0)
     {
-        int x=0;
+        x=0;
         yytext+=2;
         while(*yytext!='\0')
         {
@@ -1031,23 +1032,23 @@ YY_RULE_SETUP
             x=x*8+(*yytext-'0');
             yytext++;
         }
-        printf("INT: %d\n",x);
     }
     else 
     {
-        printf("INT: %d\n",atoi(yytext)); 
+        x=atoi(yytext);
     }
+    yylval->intval=x;
     return INT;
     }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 129 "./lexical.l"
+#line 130 "./lexical.l"
 {printf("Error type A at Line %d: illegal leading zeroes detected\n",yylineno);}
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 130 "./lexical.l"
+#line 131 "./lexical.l"
 {
     double x=0.0;
     while(*yytext!='.')
@@ -1078,37 +1079,34 @@ YY_RULE_SETUP
         }while(*yytext!='\0');
         if(!f) base=-base;
         x=x*pow(10.0,base);
-        printf("FLOAT: %.10f\n",x);
     }
-    else if(*yytext=='\0')
-    {
-        printf("FLOAT: %.10f\n",x);
-    }
+    else if(*yytext=='\0');    
+    yylval->doubleval=x;
     return FLOAT;
 }
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 168 "./lexical.l"
+#line 166 "./lexical.l"
 {printf("commented line\n");}
 	YY_BREAK
 case 37:
 /* rule 37 can match eol */
 YY_RULE_SETUP
-#line 169 "./lexical.l"
+#line 167 "./lexical.l"
 {printf("commented block\n");}
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 170 "./lexical.l"
+#line 168 "./lexical.l"
 {printf("Error type A at Line %d: Mysterious character \'%s\'\n",yylineno,yytext);}
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 171 "./lexical.l"
+#line 169 "./lexical.l"
 YY_FATAL_ERROR( "flex scanner jammed" );
 	YY_BREAK
-#line 1112 "./lex.yy.c"
+#line 1110 "./lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2125,7 +2123,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 171 "./lexical.l"
+#line 169 "./lexical.l"
 
 int yyerror(const char *msg) 
 {

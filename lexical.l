@@ -66,15 +66,15 @@ NEWLINE \n
 %%
 {WHITESPACE} {}
 {NEWLINE} {yycolumn=1;}
-{SEMI} {   yylval->nodetype="SEMI"; return SEMI;}
-{COMMA} {yylval->nodetype="COMMA"; return COMMA; }
-{LE} { yylval->nodetype="LE" ;return LE;}
-{GE} { yylval->nodetype="GE"; return GE; }
-{LEQ} {yylval->nodetype="LEQ"; return LEQ; }
-{GEQ} {yylval->nodetype="GEQ"; return GEQ; }
-{EQ} {  yylval->nodetype="EQ"; return EQ;}
-{NEQ} {yylval->nodetype="NEQ"; return NEQ; }
-{ASSIGNOP} {yylval->nodetype="ASSIGNOP"; return ASSIGNOP;}
+{SEMI} { return SEMI;}
+{COMMA} {return COMMA;}
+{LE} {return LE;}
+{GE} {return GE;}
+{LEQ} {return LEQ;}
+{GEQ} {return GEQ;}
+{EQ} {return EQ;}
+{NEQ} {return NEQ;}
+{ASSIGNOP} {return ASSIGNOP;}
 {PLUS} {return PLUS;}
 {MINUS} {return MINUS;}
 {STAR} {return STAR;}
@@ -94,12 +94,13 @@ NEWLINE \n
 {IF} {return IF;}
 {ELSE} {return ELSE;}
 {WHILE} {return WHILE;}
-{TYPE} {printf("TYPE: %s\n",yytext); return TYPE;}
-{ID} {printf("ID: %s\n",yytext); return ID;}
+{TYPE} {if(yytext[0]=='i') yylval->nodename="int"; else yylval->nodename="float"; return TYPE;}
+{ID} {yylval->nodename=yytext; return ID;}
 {INT} {
+    int x;
     if(strncmp(yytext,"0x",2)==0)
     {
-        int x=0;
+        x=0;
         yytext+=2;
         while(*yytext!='\0')
         {
@@ -118,12 +119,12 @@ NEWLINE \n
             x=x*8+(*yytext-'0');
             yytext++;
         }
-        printf("INT: %d\n",x);
     }
     else 
     {
-        printf("INT: %d\n",atoi(yytext)); 
+        x=atoi(yytext);
     }
+    yylval->intval=x;
     return INT;
     }
 {LZ} {printf("Error type A at Line %d: illegal leading zeroes detected\n",yylineno);}
@@ -157,12 +158,9 @@ NEWLINE \n
         }while(*yytext!='\0');
         if(!f) base=-base;
         x=x*pow(10.0,base);
-        printf("FLOAT: %.10f\n",x);
     }
-    else if(*yytext=='\0')
-    {
-        printf("FLOAT: %.10f\n",x);
-    }
+    else if(*yytext=='\0');    
+    yylval->doubleval=x;
     return FLOAT;
 }
 {COMMENTED_LINE} {printf("commented line\n");}

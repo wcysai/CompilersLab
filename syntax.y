@@ -51,15 +51,15 @@ ExtDefList: ExtDef ExtDefList { //1
     ;
 ExtDef: Specifier ExtDecList SEMI { //1
         $$=newast("ExtDef",1,@$.first_line,"");
-        add_child($$,$1); add_sibling($1,$2); 
+        add_child($$,$1); add_sibling($1,$2);  add_sibling($2,$3);
     }
     | Specifier SEMI { //2
         $$=newast("ExtDef",2,@$.first_line,"");
-        add_child($$,$1); 
+        add_child($$,$1); add_sibling($1,$2);
     }
     | Specifier FunDec CompSt { //3
         $$=newast("ExtDef",3,@$.first_line,"");
-        add_child($$,$1); add_sibling($1,$3); 
+        add_child($$,$1); add_sibling($1,$2); add_sibling($2,$3); 
     }
     ;
 ExtDecList: VarDec { //1
@@ -68,7 +68,7 @@ ExtDecList: VarDec { //1
     }
     | VarDec COMMA ExtDecList { //2
         $$=newast("ExtDecList",1,@$.first_line,"");
-        add_child($$,$1); add_sibling($1,$3); 
+        add_child($$,$1);  add_sibling($1,$2); add_sibling($1,$3); 
     }
 Specifier: TYPE { //1
         $$=newast("Specifier",1,@$.first_line,"");
@@ -81,11 +81,11 @@ Specifier: TYPE { //1
     ;
 StructSpecifier: STRUCT OptTag LC DefList RC{ //1
         $$=newast("StructSpecifier",1,@$.first_line,"");
-        add_child($$,$2); add_sibling($2,$4); 
+        add_child($$,$1); add_sibling($1,$2); add_sibling($2,$3); add_sibling($3,$4); add_sibling($4,$5); 
     }
     | STRUCT Tag{ //2
         $$=newast("StructSpecifier",2,@$.first_line,"");
-        add_child($$,$2); 
+        add_child($$,$1); add_sibling($1,$2); 
     }
     ;
 OptTag: ID { //1
@@ -105,21 +105,21 @@ VarDec: ID{ //1
     }
     | VarDec LB INT RB{ //2
         $$=newast("VarDec",2,@$.first_line,"");
-        add_child($$,$1); add_sibling($1,$3); 
+        add_child($$,$1); add_sibling($1,$2); add_sibling($2,$3); add_sibling($3,$4); 
     }
     ;
 FunDec: ID LP VarList RP { //1
         $$=newast("FunDec",1,@$.first_line,"");
-        add_child($$,$1); add_sibling($1,$3);
+        add_child($$,$1); add_sibling($1,$2); add_sibling($2,$3); add_sibling($3,$4);
     }
     | ID LP RP { //2
         $$=newast("FunDec",2,@$.first_line,"");
-        add_child($$,$1); 
+        add_child($$,$1); add_sibling($1,$2); add_sibling($2,$3);
     }
     ;
 VarList: ParamDec COMMA VarList{ //1
         $$=newast("VarList",1,@$.first_line,"");
-        add_child($$,$1); add_sibling($1,$3);
+        add_child($$,$1); add_sibling($1,$2); add_sibling($2,$3); 
     }
     | ParamDec { //2
         $$=newast("VarList",2,@$.first_line,"");
@@ -128,12 +128,12 @@ VarList: ParamDec COMMA VarList{ //1
     ;
 ParamDec: Specifier VarDec{ //1
         $$=newast("ParamDec",1,@$.first_line,"");
-        add_child($$,$1); add_sibling($1,$2);
+        add_child($$,$1); add_sibling($1,$2); 
     }
     ;
 CompSt: LC DefList StmtList RC{ //1
         $$=newast("Compst",1,@$.first_line,"");
-        add_child($$,$2); add_sibling($2,$3);
+        add_child($$,$1); add_sibling($1,$2);  add_sibling($2,$3); add_sibling($3,$4);
     }
     ;
 StmtList: Stmt StmtList { //1
@@ -152,19 +152,19 @@ Stmt: Exp SEMI { //1
     }
     | RETURN Exp SEMI { //3
         $$=newast("Stmt",3,@$.first_line,"");
-        add_child($$,$2);
+        add_child($$,$1); add_sibling($1,$2); add_sibling($2,$3); 
     }
     | IF LP Exp RP Stmt %prec LOWER_THAN_ELSE { //4
         $$=newast("Stmt",4,@$.first_line,"");
-        add_child($$,$3); add_sibling($3,$5); 
+        add_child($$,$1); add_sibling($1,$2); add_sibling($2,$3); add_sibling($3,$4); add_sibling($4,$5); 
     }
     | IF LP Exp RP Stmt ELSE Stmt { //5
         $$=newast("Stmt",5,@$.first_line,"");
-        add_child($$,$3); add_sibling($3,$5); add_sibling($5,$7);
+        add_child($$,$1); add_sibling($1,$2); add_sibling($2,$3); add_sibling($3,$4); add_sibling($4,$5); add_child($5,$6); add_sibling($6,$7); 
     }
     | WHILE LP Exp RP Stmt{ // 6
         $$=newast("Stmt",6,@$.first_line,"");
-        add_child($$,$3); add_sibling($3,$5);
+        add_child($$,$1); add_sibling($1,$2); add_sibling($2,$3); add_sibling($3,$4); add_sibling($4,$5);
     }
     ;
 
@@ -177,7 +177,7 @@ DefList: Def DefList { //1
 
 Def: Specifier DecList SEMI { //1
         $$=newast("Def",1,@$.first_line,"");
-        add_child($$,$1); add_sibling($1,$2);
+        add_child($$,$1); add_sibling($1,$2); add_sibling($2,$3);
     }
     ;
 
@@ -187,7 +187,7 @@ DecList: Dec { //1
     }
     | Dec COMMA DecList { //2
         $$=newast("VarDec",2,@$.first_line,"");
-        add_child($$,$1); add_sibling($1,$3);
+        add_child($$,$1); add_sibling($1,$2); add_sibling($2,$3);
     }
     ;
 
@@ -197,7 +197,7 @@ Dec: VarDec { //1
     }
     | VarDec ASSIGNOP Exp { //2
         $$=newast("VarDec",2,@$.first_line,"");
-        add_child($$,$1); add_sibling($1,$3);
+        add_child($$,$1); add_sibling($1,$2); add_sibling($2,$3);
     }
     ;
 
@@ -215,75 +215,94 @@ Exp: ID { //1
     } 
     | Exp ASSIGNOP Exp { //4
         $$=newast("Exp",4,@$.first_line,""); 
-        add_child($$,$1); add_sibling($1,$3);
+        add_child($$,$1); add_sibling($1,$2); add_sibling($2,$3);
     }
     | Exp AND Exp { //5
         $$=newast("Exp",5,@$.first_line,""); 
-        add_child($$,$1); add_sibling($1,$3);
+        add_child($$,$1); add_sibling($1,$2); add_sibling($2,$3);
     }
     | Exp OR Exp {  //6
         $$=newast("Exp",6,@$.first_line,""); 
-        add_child($$,$1); add_sibling($1,$3);
+        add_child($$,$1); add_sibling($1,$2); add_sibling($2,$3);
     }
     | Exp LE Exp { //7
         $$=newast("Exp",7,@$.first_line,""); 
-        add_child($$,$1); add_sibling($1,$3);
+        add_child($$,$1); add_sibling($1,$2); add_sibling($2,$3);
     }
     | Exp GE Exp { //8
         $$=newast("Exp",8,@$.first_line,""); 
-        add_child($$,$1); add_sibling($1,$3);
+        add_child($$,$1); add_sibling($1,$2); add_sibling($2,$3);
     }
     | Exp GEQ Exp { //9
         $$=newast("Exp",9,@$.first_line,""); 
-        add_child($$,$1); add_sibling($1,$3);
+        add_child($$,$1); add_sibling($1,$2); add_sibling($2,$3);
     } 
     | Exp LEQ Exp  { //10
         $$=newast("Exp",10,@$.first_line,""); 
-        add_child($$,$1); add_sibling($1,$3);
+        add_child($$,$1); add_sibling($1,$2); add_sibling($2,$3);
     }
     | Exp EQ Exp {  //11
         $$=newast("Exp",11,@$.first_line,""); 
-        add_child($$,$1); add_sibling($1,$3);
+        add_child($$,$1); add_sibling($1,$2); add_sibling($2,$3);
     }
     | Exp NEQ Exp {  //12
         $$=newast("Exp",12,@$.first_line,""); 
-        add_child($$,$1); add_sibling($1,$3);
+        add_child($$,$1); add_sibling($1,$2); add_sibling($2,$3);
     }
     | Exp PLUS Exp { //13
         $$=newast("Exp",13,@$.first_line,""); 
-        add_child($$,$1); add_sibling($1,$3);
+        add_child($$,$1); add_sibling($1,$2); add_sibling($2,$3);
     }
     | Exp MINUS Exp { //14
         $$=newast("Exp",14,@$.first_line,""); 
-        add_child($$,$1); add_sibling($1,$3);
+        add_child($$,$1); add_sibling($1,$2); add_sibling($2,$3);
     }
     | Exp STAR Exp { //15
         $$=newast("Exp",15,@$.first_line,""); 
-        add_child($$,$1); add_sibling($1,$3);
+        add_child($$,$1); add_sibling($1,$2); add_sibling($2,$3);
     }
     | Exp DIV Exp {  //16
         $$=newast("Exp",16,@$.first_line,""); 
-        add_child($$,$1); add_sibling($1,$3);
+        add_child($$,$1); add_sibling($1,$2); add_sibling($2,$3);
     }
     | LP Exp RP {  //17
-        $$=$2;
+        $$=newast("Exp",17,@$.first_line,""); 
+        add_child($$,$1); add_sibling($1,$2); add_sibling($2,$3);
     }
     | MINUS Exp {  //18
         $$=newast("Exp",18,@$.first_line,""); 
-        add_child($$,$2);
+        add_child($$,$1); add_sibling($1,$2);
     } %prec UMINUS
     | NOT Exp  { //19
         $$=newast("Exp",19,@$.first_line,""); 
-        add_child($$,$2);
+        add_child($$,$1); add_sibling($1,$2);
     }
-    | ID LP Args RP 
-    | ID LP RP 
-    | Exp LB Exp RB
-    | Exp DOT ID
+    | ID LP Args RP {  //20
+        $$=newast("Exp",20,@$.first_line,""); 
+        add_child($$,$1); add_sibling($1,$2); add_sibling($2,$3); add_sibling($3,$4);
+    }
+    | ID LP RP { //21
+        $$=newast("Exp",21,@$.first_line,""); 
+        add_child($$,$1); add_sibling($1,$2); add_sibling($2,$3);
+    }
+    | Exp LB Exp RB{  //22
+        $$=newast("Exp",22,@$.first_line,""); 
+        add_child($$,$1); add_sibling($1,$2); add_sibling($2,$3); add_sibling($3,$4);
+    }
+    | Exp DOT ID { //23
+        $$=newast("Exp",23,@$.first_line,""); 
+        add_child($$,$1); add_sibling($1,$2); add_sibling($2,$3);
+    }
     ;
 
-Args: Exp COMMA Args
-    | Exp
+Args: Exp COMMA Args{ //1
+        $$=newast("Args",1,@$.first_line,""); 
+        add_child($$,$1); add_sibling($1,$2); add_sibling($2,$3);
+    }
+    | Exp{ //2
+        $$=newast("Args",2,@$.first_line,""); 
+        add_child($$,$1);
+    }
     ;
 %%
 int main(int argc, char** argv)
