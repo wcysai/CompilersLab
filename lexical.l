@@ -3,9 +3,9 @@
     #include "syntax.tab.h"
     int yycolumn=1;
 #define YY_USER_ACTION\
-    yylloc.first_line=yylloc.last_line=yylino;\
+    yylloc.first_line=yylloc.last_line=yylineno;\
     yylloc.first_column=yycolumn;\
-    yylloc.last_colimn=yycolumn+yyleng-1;\
+    yylloc.last_column=yycolumn+yyleng-1;\
     yycolumn+=yyleng;
 %}
 %option noyywrap nodefault yylineno

@@ -5,6 +5,7 @@ struct ast
 {
     char *nodetype;
     char *nodename;
+    int opnum;
     double doubleval;
     int intval;
     int lineno;
@@ -18,7 +19,7 @@ struct numval
     double number;
 };
 
-struct ast *newast(char *nodetype, int lineno,char *nodename);
+struct ast *newast(char *nodetype, int opnum, int lineno,char *nodename);
 void add_child(struct ast* node,struct ast *child);
 void add_sibling(struct ast* node,struct ast *sibling);
 

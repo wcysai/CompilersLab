@@ -3,7 +3,7 @@
 #include <stdarg.h>
 #include "defi.h"
 struct ast *
-newast(char *nodetype, int lineno, char *nodename)
+newast(char *nodetype, int opnum, int lineno, char *nodename)
 {
     struct ast *a=malloc(sizeof(struct ast));
     if(!a)
@@ -12,9 +12,10 @@ newast(char *nodetype, int lineno, char *nodename)
         exit(-1);
     }
     a->nodetype=nodetype;
-    a->lineno=lineno;
+    a->lineno=lineno; a->opnum=opnum;
     a->nodename=nodename;
     a->child=NULL; a->sibling=NULL;
+    a->intval=0; a->doubleval=0;
     return a;
 }
 void add_child(struct ast *node,struct ast *child)
