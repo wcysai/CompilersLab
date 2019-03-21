@@ -7,6 +7,8 @@
     yylloc.first_column=yycolumn;\
     yylloc.last_column=yycolumn+yyleng-1;\
     yycolumn+=yyleng;
+    #define YYSTYPE struct ast*
+    extern int no_syntax_error;
 %}
 %option noyywrap nodefault yylineno
 octonary_digit [0-7]
@@ -49,7 +51,7 @@ AND &&
 OR \|\|
 DOT \.
 NOT !
-TYPE (int|float)\ +
+TYPE "int"|"float"
 LP "("
 RP ")"
 LB "["
@@ -66,36 +68,36 @@ NEWLINE \n
 %%
 {WHITESPACE} {}
 {NEWLINE} {yycolumn=1;}
-{SEMI} { return SEMI;}
-{COMMA} {return COMMA;}
-{LE} {return LE;}
-{GE} {return GE;}
-{LEQ} {return LEQ;}
-{GEQ} {return GEQ;}
-{EQ} {return EQ;}
-{NEQ} {return NEQ;}
-{ASSIGNOP} {return ASSIGNOP;}
-{PLUS} {return PLUS;}
-{MINUS} {return MINUS;}
-{STAR} {return STAR;}
-{DIV} {return DIV;}
-{AND} {return AND;}
-{OR} {return OR;}
-{DOT} {return DOT;}
-{NOT} {return NOT;}
-{LP} {return LP;}
-{RP} {return RP;}
-{LB} {return LB;}
-{RB} {return RB;}
-{LC} {return LC;}
-{RC} {return RC;}
-{STRUCT} {return STRUCT;}
-{RETURN} {return RETURN;}
-{IF} {return IF;}
-{ELSE} {return ELSE;}
-{WHILE} {return WHILE;}
-{TYPE} {if(yytext[0]=='i') yylval->nodename="int"; else yylval->nodename="float"; return TYPE;}
-{ID} {yylval->nodename=yytext; return ID;}
+{SEMI} {yylval=newast("SEMI",0,yylineno,""); return SEMI;} 
+{COMMA} {yylval=newast("COMMA",0,yylineno,""); return COMMA;} 
+{LE} {yylval=newast("LE",0,yylineno,""); return LE;} 
+{GE} {yylval=newast("GE",0,yylineno,""); return GE;} 
+{LEQ} {yylval=newast("LEQ",0,yylineno,""); return LEQ;} 
+{GEQ} {yylval=newast("GEQ",0,yylineno,""); return GEQ;} 
+{EQ} {yylval=newast("EQ",0,yylineno,""); return EQ;} 
+{NEQ} {yylval=newast("NEQ",0,yylineno,""); return NEQ;} 
+{ASSIGNOP} {yylval=newast("ASSIGNOP",0,yylineno,""); return ASSIGNOP;} 
+{PLUS} {yylval=newast("PLUS",0,yylineno,""); return PLUS;} 
+{MINUS} {yylval=newast("MINUS",0,yylineno,""); return MINUS;} 
+{STAR} {yylval=newast("STAR",0,yylineno,""); return STAR;} 
+{DIV} {yylval=newast("DIV",0,yylineno,""); return DIV;} 
+{AND} {yylval=newast("AND",0,yylineno,""); return AND;} 
+{OR} {yylval=newast("OR",0,yylineno,""); return OR;} 
+{DOT} {yylval=newast("DOT",0,yylineno,""); return DOT;} 
+{NOT} {yylval=newast("NOT",0,yylineno,""); return NOT;} 
+{LP} {yylval=newast("LP",0,yylineno,""); return LP;}
+{RP} {yylval=newast("RP",0,yylineno,""); return RP;}
+{LB} {yylval=newast("LB",0,yylineno,""); return LB;}
+{RB} {yylval=newast("RB",0,yylineno,""); return RB;}
+{LC} {yylval=newast("LC",0,yylineno,""); return LC;}
+{RC} {yylval=newast("RC",0,yylineno,""); return RC;} 
+{STRUCT} {yylval=newast("STRUCT",0,yylineno,""); return STRUCT;} 
+{RETURN} {yylval=newast("RETURN",0,yylineno,""); return RETURN;} 
+{IF} {yylval=newast("IF",0,yylineno,""); return IF;} 
+{ELSE} {yylval=newast("ELSE",0,yylineno,""); return ELSE;} 
+{WHILE} {yylval=newast("WHILE",0,yylineno,""); return WHILE;} 
+{TYPE} {yylval=newast("TYPE",0,yylineno,""); if(*yytext=='i') yylval->nodename="int"; else yylval->nodename="float"; return TYPE;} 
+{ID} {yylval=newast("ID",0,yylineno,""); yylval->nodename=malloc(sizeof(char*));strcpy(yylval->nodename,yytext); return ID;}
 {INT} {
     int x;
     if(strncmp(yytext,"0x",2)==0)
@@ -124,10 +126,11 @@ NEWLINE \n
     {
         x=atoi(yytext);
     }
+    yylval=newast("INT",0,yylineno,"");
     yylval->intval=x;
     return INT;
     }
-{LZ} {printf("Error type A at Line %d: illegal leading zeroes detected\n",yylineno);}
+{LZ} {printf("Error type A at Line %d: illegal leading zeroes detected\n",yylineno); no_syntax_error=0;}
 {FLOAT} {
     double x=0.0;
     while(*yytext!='.')
@@ -159,17 +162,19 @@ NEWLINE \n
         if(!f) base=-base;
         x=x*pow(10.0,base);
     }
-    else if(*yytext=='\0');    
+    else if(*yytext=='\0');   
+    yylval=newast("FLOAT",0,yylineno,"");
     yylval->doubleval=x;
     return FLOAT;
 }
 {COMMENTED_LINE} {printf("commented line\n");}
 {COMMENTED_BLOCK} {printf("commented block\n");}
-{OTHERWISE} {printf("Error type A at Line %d: Mysterious character \'%s\'\n",yylineno,yytext);}
+{OTHERWISE} {printf("Error type A at Line %d: Mysterious character \'%s\'\n",yylineno,yytext); no_syntax_error=0;}
 %%
 int yyerror(const char *msg) 
 {
     fprintf(stderr, "Error: %s\n", msg);
+    no_syntax_error=0;
     return 0;
 }
 

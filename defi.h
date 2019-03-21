@@ -23,6 +23,7 @@ struct numval
 struct ast *newast(char *nodetype, int opnum, int lineno,char *nodename);
 void add_child(struct ast* node,struct ast *child);
 void add_sibling(struct ast* node,struct ast *sibling);
+void print_ast(struct ast* node,int tabs);
 
 double eval(struct ast*);
 

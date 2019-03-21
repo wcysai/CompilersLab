@@ -2,8 +2,11 @@
     #include<stdio.h>
     #include<math.h>
     #include<stdbool.h>
+    #include<assert.h>
     #include "defi.h"
     #include"lex.yy.c"
+    struct ast *root;
+    int no_syntax_error;
 %}
 /* types */
 %define api.value.type {struct ast*}
@@ -40,7 +43,7 @@
 %%
 Program: ExtDefList { //1
         $$=newast("Program",1,@$.first_line,"");
-        add_child($$,$1); 
+        add_child($$,$1); root=$$; 
     }
     ;
 ExtDefList: ExtDef ExtDefList { //1
@@ -114,6 +117,7 @@ FunDec: ID LP VarList RP { //1
     }
     | ID LP RP { //2
         $$=newast("FunDec",2,@$.first_line,"");
+        //printf("found ID: %s\n",$1->nodename);
         add_child($$,$1); add_sibling($1,$2); add_sibling($2,$3);
     }
     ;
@@ -132,8 +136,8 @@ ParamDec: Specifier VarDec{ //1
     }
     ;
 CompSt: LC DefList StmtList RC{ //1
-        $$=newast("Compst",1,@$.first_line,"");
-        add_child($$,$1); add_sibling($1,$2);  add_sibling($2,$3); add_sibling($3,$4);
+        $$=newast("CompSt",1,@$.first_line,"");
+        add_child($$,$1); add_sibling($1,$2); add_sibling($2,$3); add_sibling($3,$4);
     }
     ;
 StmtList: Stmt StmtList { //1
@@ -314,7 +318,11 @@ int main(int argc, char** argv)
         perror(argv[1]);
         return 1;
     }
+    no_syntax_error=1;
+    yylval=malloc(sizeof(struct ast));
     yyrestart(f);
-    if(yyparse()) puts("done");
+    //yydebug=1;
+    yyparse();
+    if(no_syntax_error) print_ast(root,0);
 }
 
