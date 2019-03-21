@@ -2,6 +2,7 @@
     #include<math.h>
     #include "syntax.tab.h"
 %}
+%option noyywrap nodefault yylineno
 octonary_digit [0-7]
 non_zero_octonary_digit [1-7]
 hexadecimal_digit [0-9]|[A-F]|[a-f]
@@ -19,7 +20,7 @@ INT {NON_ZERO_INT}|0
 EXPONENTIAL_FORM [E|e][+|-]?{digit}+
 FLOAT {digit}*(\.{digit}*|(\.{digit}*{EXPONENTIAL_FORM}))
 LZ 0{NON_ZERO_INT}
-LINE_COMMENT \/\/
+LINE_COMMENT "//".*
 BLOCK_COMMENT_START \/\*
 BLOCK_COMMENT_END \*\/
 COMMENTED_LINE {LINE_COMMENT}.*
@@ -54,9 +55,11 @@ RETURN return
 IF if
 ELSE else
 WHILE while
-OTHERWISE .
+OTHERWISE . 
+NEWLINE \n
 %%
 {WHITESPACE} {}
+{NEWLINE} {}
 {SEMI} {return SEMI;}
 {COMMA} {return COMMA;}
 {LE} {return LE;}
@@ -99,7 +102,6 @@ OTHERWISE .
             else x=x*16+(10+*yytext-'A');
             yytext++;
         }
-        yylval=x;
         printf("INT: %d\n",x);
     }
     else if(strncmp(yytext,"0",1)==0) 
@@ -161,7 +163,6 @@ OTHERWISE .
 {COMMENTED_BLOCK} {printf("commented block\n");}
 {OTHERWISE} {printf("Error type A at Line %d: Mysterious characters \'%s\'\n",yylineno,yytext);}
 %%
-int yywrap() {return 1;}
 int yyerror(const char *msg) 
 {
     fprintf(stderr, "Error: %s\n", msg);

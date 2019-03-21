@@ -67,9 +67,10 @@
     #include<stdio.h>
     #include<math.h>
     #include<stdbool.h>
+    #include "defi.h"
     #include"lex.yy.c"
 
-#line 73 "./syntax.tab.c" /* yacc.c:339  */
+#line 74 "./syntax.tab.c" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -143,7 +144,18 @@ extern int yydebug;
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-typedef int YYSTYPE;
+
+union YYSTYPE
+{
+#line 10 "./syntax.y" /* yacc.c:355  */
+
+    struct ast *a;
+    double d;
+
+#line 156 "./syntax.tab.c" /* yacc.c:355  */
+};
+
+typedef union YYSTYPE YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
 #endif
@@ -157,7 +169,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 161 "./syntax.tab.c" /* yacc.c:358  */
+#line 173 "./syntax.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -458,13 +470,13 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    32,    32,    34,    35,    37,    38,    39,    41,    42,
-      43,    44,    46,    47,    49,    50,    52,    54,    55,    57,
-      58,    60,    61,    63,    65,    67,    68,    70,    71,    72,
-      73,    74,    75,    76,    77,    79,    81,    82,    84,    85,
-      87,    88,    89,    90,    91,    92,    93,    94,    95,    96,
-      97,    98,    99,   100,   101,   102,   103,   104,   105,   106,
-     107,   108,   109,   111,   112
+       0,    39,    39,    41,    42,    44,    45,    46,    48,    49,
+      50,    51,    53,    54,    56,    57,    59,    61,    62,    64,
+      65,    67,    68,    70,    72,    74,    75,    77,    78,    79,
+      80,    81,    82,    83,    84,    86,    88,    89,    91,    92,
+      94,    95,    96,    97,    98,    99,   100,   101,   102,   103,
+     104,   105,   106,   107,   108,   109,   110,   111,   112,   113,
+     114,   115,   116,   118,   119
 };
 #endif
 
@@ -1347,115 +1359,115 @@ yyreduce:
   switch (yyn)
     {
         case 41:
-#line 88 "./syntax.y" /* yacc.c:1646  */
-    {(yyval)=(yyvsp[0]);}
-#line 1353 "./syntax.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 42:
-#line 89 "./syntax.y" /* yacc.c:1646  */
-    {(yyval)=(yyvsp[0]);}
-#line 1359 "./syntax.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 43:
-#line 90 "./syntax.y" /* yacc.c:1646  */
-    {(yyval)=((yyvsp[-2])==(yyvsp[0]));}
+#line 95 "./syntax.y" /* yacc.c:1646  */
+    {(yyval.d)=(yyvsp[0].d);}
 #line 1365 "./syntax.tab.c" /* yacc.c:1646  */
     break;
 
-  case 44:
-#line 91 "./syntax.y" /* yacc.c:1646  */
-    {(yyval)=((yyvsp[-2])&&(yyvsp[0]));}
+  case 42:
+#line 96 "./syntax.y" /* yacc.c:1646  */
+    {(yyval.d)=(yyvsp[0].d);}
 #line 1371 "./syntax.tab.c" /* yacc.c:1646  */
     break;
 
-  case 45:
-#line 92 "./syntax.y" /* yacc.c:1646  */
-    {(yyval)=((yyvsp[-2])||(yyvsp[0]));}
+  case 43:
+#line 97 "./syntax.y" /* yacc.c:1646  */
+    {(yyval.d)=((yyvsp[-2].d)==(yyvsp[0].d));}
 #line 1377 "./syntax.tab.c" /* yacc.c:1646  */
     break;
 
-  case 46:
-#line 93 "./syntax.y" /* yacc.c:1646  */
-    {(yyval)=((yyvsp[-2])<(yyvsp[0]));}
+  case 44:
+#line 98 "./syntax.y" /* yacc.c:1646  */
+    {(yyval.d)=((yyvsp[-2].d)&&(yyvsp[0].d));}
 #line 1383 "./syntax.tab.c" /* yacc.c:1646  */
     break;
 
-  case 47:
-#line 94 "./syntax.y" /* yacc.c:1646  */
-    {(yyval)=((yyvsp[-2])>(yyvsp[0]));}
+  case 45:
+#line 99 "./syntax.y" /* yacc.c:1646  */
+    {(yyval.d)=((yyvsp[-2].d)||(yyvsp[0].d));}
 #line 1389 "./syntax.tab.c" /* yacc.c:1646  */
     break;
 
-  case 48:
-#line 95 "./syntax.y" /* yacc.c:1646  */
-    {(yyval)=((yyvsp[-2])>=(yyvsp[0]));}
+  case 46:
+#line 100 "./syntax.y" /* yacc.c:1646  */
+    {(yyval.d)=((yyvsp[-2].d)<(yyvsp[0].d));}
 #line 1395 "./syntax.tab.c" /* yacc.c:1646  */
     break;
 
-  case 49:
-#line 96 "./syntax.y" /* yacc.c:1646  */
-    {(yyval)=((yyvsp[-2])<=(yyvsp[0]));}
+  case 47:
+#line 101 "./syntax.y" /* yacc.c:1646  */
+    {(yyval.d)=((yyvsp[-2].d)>(yyvsp[0].d));}
 #line 1401 "./syntax.tab.c" /* yacc.c:1646  */
     break;
 
-  case 50:
-#line 97 "./syntax.y" /* yacc.c:1646  */
-    {(yyval)=((yyvsp[-2])==(yyvsp[0]));}
+  case 48:
+#line 102 "./syntax.y" /* yacc.c:1646  */
+    {(yyval.d)=((yyvsp[-2].d)>=(yyvsp[0].d));}
 #line 1407 "./syntax.tab.c" /* yacc.c:1646  */
     break;
 
-  case 51:
-#line 98 "./syntax.y" /* yacc.c:1646  */
-    {(yyval)=((yyvsp[-2])!=(yyvsp[0]));}
+  case 49:
+#line 103 "./syntax.y" /* yacc.c:1646  */
+    {(yyval.d)=((yyvsp[-2].d)<=(yyvsp[0].d));}
 #line 1413 "./syntax.tab.c" /* yacc.c:1646  */
     break;
 
-  case 52:
-#line 99 "./syntax.y" /* yacc.c:1646  */
-    {(yyval)=(yyvsp[-2])+(yyvsp[0]);}
+  case 50:
+#line 104 "./syntax.y" /* yacc.c:1646  */
+    {(yyval.d)=((yyvsp[-2].d)==(yyvsp[0].d));}
 #line 1419 "./syntax.tab.c" /* yacc.c:1646  */
     break;
 
-  case 53:
-#line 100 "./syntax.y" /* yacc.c:1646  */
-    {(yyval)=(yyvsp[-2])-(yyvsp[0]);}
+  case 51:
+#line 105 "./syntax.y" /* yacc.c:1646  */
+    {(yyval.d)=((yyvsp[-2].d)!=(yyvsp[0].d));}
 #line 1425 "./syntax.tab.c" /* yacc.c:1646  */
     break;
 
-  case 54:
-#line 101 "./syntax.y" /* yacc.c:1646  */
-    {(yyval)=(yyvsp[-2])*(yyvsp[0]);}
+  case 52:
+#line 106 "./syntax.y" /* yacc.c:1646  */
+    {(yyval.d)=(yyvsp[-2].d)+(yyvsp[0].d);}
 #line 1431 "./syntax.tab.c" /* yacc.c:1646  */
     break;
 
-  case 55:
-#line 102 "./syntax.y" /* yacc.c:1646  */
-    {(yyval)=(yyvsp[-2])/(yyvsp[0]);}
+  case 53:
+#line 107 "./syntax.y" /* yacc.c:1646  */
+    {(yyval.d)=(yyvsp[-2].d)-(yyvsp[0].d);}
 #line 1437 "./syntax.tab.c" /* yacc.c:1646  */
     break;
 
-  case 56:
-#line 103 "./syntax.y" /* yacc.c:1646  */
-    {(yyval)=(yyvsp[-1]);}
+  case 54:
+#line 108 "./syntax.y" /* yacc.c:1646  */
+    {(yyval.d)=(yyvsp[-2].d)*(yyvsp[0].d);}
 #line 1443 "./syntax.tab.c" /* yacc.c:1646  */
     break;
 
-  case 57:
-#line 104 "./syntax.y" /* yacc.c:1646  */
-    {(yyval)=-(yyvsp[0]);}
+  case 55:
+#line 109 "./syntax.y" /* yacc.c:1646  */
+    {(yyval.d)=(yyvsp[-2].d)/(yyvsp[0].d);}
 #line 1449 "./syntax.tab.c" /* yacc.c:1646  */
     break;
 
-  case 58:
-#line 105 "./syntax.y" /* yacc.c:1646  */
-    {(yyval)=!(yyvsp[0]);}
+  case 56:
+#line 110 "./syntax.y" /* yacc.c:1646  */
+    {(yyval.d)=(yyvsp[-1].d);}
 #line 1455 "./syntax.tab.c" /* yacc.c:1646  */
     break;
 
+  case 57:
+#line 111 "./syntax.y" /* yacc.c:1646  */
+    {(yyval.d)=-(yyvsp[0].d);}
+#line 1461 "./syntax.tab.c" /* yacc.c:1646  */
+    break;
 
-#line 1459 "./syntax.tab.c" /* yacc.c:1646  */
+  case 58:
+#line 112 "./syntax.y" /* yacc.c:1646  */
+    {(yyval.d)=!(yyvsp[0].d);}
+#line 1467 "./syntax.tab.c" /* yacc.c:1646  */
+    break;
+
+
+#line 1471 "./syntax.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1683,7 +1695,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 114 "./syntax.y" /* yacc.c:1906  */
+#line 121 "./syntax.y" /* yacc.c:1906  */
 
 int main(int argc, char** argv)
 {

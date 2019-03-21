@@ -2,10 +2,17 @@
     #include<stdio.h>
     #include<math.h>
     #include<stdbool.h>
+    #include "defi.h"
     #include"lex.yy.c"
 %}
 /* types */
-
+%union
+{
+    struct ast *a;
+    double d;
+}
+%type <d> Exp 
+%type <d> INT FLOAT
 /* tokens */
 %token ID
 %token INT FLOAT
@@ -103,8 +110,8 @@ Exp: ID
     | LP Exp RP {$$=$2;}
     | MINUS Exp {$$=-$2;} %prec UMINUS
     | NOT Exp {$$=!$2;}
-    | ID LP Args RP
-    | ID LP RP
+    | ID LP Args RP 
+    | ID LP RP 
     | Exp LB Exp RB
     | Exp DOT ID
     ;
