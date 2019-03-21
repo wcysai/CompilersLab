@@ -1680,7 +1680,7 @@ yyreduce:
 #line 149 "./syntax.y" /* yacc.c:1646  */
     { //1
         (yyval)=newast("Stmt",1,(yyloc).first_line,"");
-        add_child((yyval),(yyvsp[-1])); 
+        add_child((yyval),(yyvsp[-1])); add_sibling((yyvsp[-1]),(yyvsp[0])); 
     }
 #line 1686 "./syntax.tab.c" /* yacc.c:1646  */
     break;
@@ -1766,7 +1766,7 @@ yyreduce:
   case 37:
 #line 192 "./syntax.y" /* yacc.c:1646  */
     { //2
-        (yyval)=newast("VarDec",2,(yyloc).first_line,"");
+        (yyval)=newast("DecList",2,(yyloc).first_line,"");
         add_child((yyval),(yyvsp[-2])); add_sibling((yyvsp[-2]),(yyvsp[-1])); add_sibling((yyvsp[-1]),(yyvsp[0]));
     }
 #line 1773 "./syntax.tab.c" /* yacc.c:1646  */
@@ -1775,7 +1775,7 @@ yyreduce:
   case 38:
 #line 198 "./syntax.y" /* yacc.c:1646  */
     { //1
-        (yyval)=newast("VarDec",1,(yyloc).first_line,"");
+        (yyval)=newast("Dec",1,(yyloc).first_line,"");
         add_child((yyval),(yyvsp[0]));
     }
 #line 1782 "./syntax.tab.c" /* yacc.c:1646  */
@@ -1784,7 +1784,7 @@ yyreduce:
   case 39:
 #line 202 "./syntax.y" /* yacc.c:1646  */
     { //2
-        (yyval)=newast("VarDec",2,(yyloc).first_line,"");
+        (yyval)=newast("Dec",2,(yyloc).first_line,"");
         add_child((yyval),(yyvsp[-2])); add_sibling((yyvsp[-2]),(yyvsp[-1])); add_sibling((yyvsp[-1]),(yyvsp[0]));
     }
 #line 1791 "./syntax.tab.c" /* yacc.c:1646  */

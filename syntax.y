@@ -148,7 +148,7 @@ StmtList: Stmt StmtList { //1
     ;
 Stmt: Exp SEMI { //1
         $$=newast("Stmt",1,@$.first_line,"");
-        add_child($$,$1); 
+        add_child($$,$1); add_sibling($1,$2); 
     }
     | CompSt { //2
         $$=newast("Stmt",2,@$.first_line,"");
@@ -190,17 +190,17 @@ DecList: Dec { //1
         add_child($$,$1);
     }
     | Dec COMMA DecList { //2
-        $$=newast("VarDec",2,@$.first_line,"");
+        $$=newast("DecList",2,@$.first_line,"");
         add_child($$,$1); add_sibling($1,$2); add_sibling($2,$3);
     }
     ;
 
 Dec: VarDec { //1
-        $$=newast("VarDec",1,@$.first_line,"");
+        $$=newast("Dec",1,@$.first_line,"");
         add_child($$,$1);
     }
     | VarDec ASSIGNOP Exp { //2
-        $$=newast("VarDec",2,@$.first_line,"");
+        $$=newast("Dec",2,@$.first_line,"");
         add_child($$,$1); add_sibling($1,$2); add_sibling($2,$3);
     }
     ;
