@@ -1,3 +1,4 @@
+#include<stdbool.h>
 extern int yylineno;
 int yyerror(const char *msg);
 struct ast

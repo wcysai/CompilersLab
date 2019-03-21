@@ -15,3 +15,5 @@ newast(int nodetype, struct ast *l,struct ast *r)
     a->l=l; a->r=r;
     return a;
 }
+
+

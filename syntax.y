@@ -11,8 +11,8 @@
     struct ast *a;
     double d;
 }
-%type <d> Exp 
-%type <d> INT FLOAT
+%type <a> Exp 
+%type <a> INT FLOAT
 /* tokens */
 %token ID
 %token INT FLOAT
@@ -91,25 +91,25 @@ DecList: Dec
 Dec: VarDec
     | VarDec ASSIGNOP Exp
 
-Exp: ID
-    | INT {$$=$1;}
-    | FLOAT {$$=$1;}
-    | Exp ASSIGNOP Exp {$$=($1==$3);}
-    | Exp AND Exp {$$=($1&&$3);}
-    | Exp OR Exp {$$=($1||$3);}
-    | Exp LE Exp {$$=($1<$3);}
-    | Exp GE Exp {$$=($1>$3);}
-    | Exp GEQ Exp {$$=($1>=$3);} 
-    | Exp LEQ Exp {$$=($1<=$3);}
-    | Exp EQ Exp {$$=($1==$3);}
-    | Exp NEQ Exp {$$=($1!=$3);}
-    | Exp PLUS Exp {$$=$1+$3;}
-    | Exp MINUS Exp {$$=$1-$3;}
-    | Exp STAR Exp {$$=$1*$3;}
-    | Exp DIV Exp {$$=$1/$3;}
+Exp: ID {$$=newast(ID,NULL,NULL);}
+    | INT {$$=newast(INT,NULL,NULL);}
+    | FLOAT {$$=newast(FLOAT,NULL,NULL);}
+    | Exp ASSIGNOP Exp {$$=newast(ASSIGNOP,$1,$3);}
+    | Exp AND Exp {$$=newast(AND,$1,$3);}
+    | Exp OR Exp {$$=newast(OR,$1,$3);}
+    | Exp LE Exp {$$=newast(LE,$1,$3);}
+    | Exp GE Exp {$$=newast(GE,$1,$3);}
+    | Exp GEQ Exp {$$=newast(GEQ,$1,$3);} 
+    | Exp LEQ Exp {$$=newast(LEQ,$1,$3);}
+    | Exp EQ Exp {$$=newast(EQ,$1,$3);}
+    | Exp NEQ Exp {$$=newast(LEQ,$1,$3);}
+    | Exp PLUS Exp {$$=newast(PLUS,$1,$3);}
+    | Exp MINUS Exp {$$=newast(MINUS,$1,$3);}
+    | Exp STAR Exp {$$=newast(STAR,$1,$3);}
+    | Exp DIV Exp {$$=newast(DIV,$1,$3);}
     | LP Exp RP {$$=$2;}
-    | MINUS Exp {$$=-$2;} %prec UMINUS
-    | NOT Exp {$$=!$2;}
+    | MINUS Exp {$$=newast(MINUS,$2,NULL);} %prec UMINUS
+    | NOT Exp {$$=newast(NOT,$2,NULL);}
     | ID LP Args RP 
     | ID LP RP 
     | Exp LB Exp RB
@@ -129,6 +129,6 @@ int main(int argc, char** argv)
         return 1;
     }
     yyrestart(f);
-    yyparse();
+    if(yyparse()) puts("done");
 }
 

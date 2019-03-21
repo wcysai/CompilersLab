@@ -893,7 +893,7 @@ YY_RULE_SETUP
 case 11:
 YY_RULE_SETUP
 #line 71 "./lexical.l"
-{return ASSIGNOP;}
+{puts("ASSIGNOP"); return ASSIGNOP;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
@@ -1015,7 +1015,6 @@ YY_RULE_SETUP
             else x=x*16+(10+*yytext-'A');
             yytext++;
         }
-        printf("INT: %d\n",x);
     }
     else if(strncmp(yytext,"0",1)==0) 
     {
@@ -1032,17 +1031,17 @@ YY_RULE_SETUP
     {
         printf("INT: %d\n",atoi(yytext)); 
     }
-    //yylval=x; return INT;
+    return INT;
     }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 124 "./lexical.l"
+#line 123 "./lexical.l"
 {printf("Error type A at Line %d: illegal leading zeroes detected\n",yylineno);}
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 125 "./lexical.l"
+#line 124 "./lexical.l"
 {
     double x=0.0;
     while(*yytext!='.')
@@ -1079,6 +1078,7 @@ YY_RULE_SETUP
     {
         printf("FLOAT: %.10f\n",x);
     }
+    return FLOAT;
 }
 	YY_BREAK
 case 36:

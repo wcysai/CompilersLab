@@ -68,7 +68,7 @@ NEWLINE \n
 {GEQ} {return GEQ;}
 {EQ} {return EQ;}
 {NEQ} {return NEQ;}
-{ASSIGNOP} {return ASSIGNOP;}
+{ASSIGNOP} {puts("ASSIGNOP"); return ASSIGNOP;}
 {PLUS} {return PLUS;}
 {MINUS} {return MINUS;}
 {STAR} {return STAR;}
@@ -102,7 +102,6 @@ NEWLINE \n
             else x=x*16+(10+*yytext-'A');
             yytext++;
         }
-        printf("INT: %d\n",x);
     }
     else if(strncmp(yytext,"0",1)==0) 
     {
@@ -119,7 +118,7 @@ NEWLINE \n
     {
         printf("INT: %d\n",atoi(yytext)); 
     }
-    //yylval=x; return INT;
+    return INT;
     }
 {LZ} {printf("Error type A at Line %d: illegal leading zeroes detected\n",yylineno);}
 {FLOAT} {
@@ -158,10 +157,11 @@ NEWLINE \n
     {
         printf("FLOAT: %.10f\n",x);
     }
+    return FLOAT;
 }
 {COMMENTED_LINE} {printf("commented line\n");}
 {COMMENTED_BLOCK} {printf("commented block\n");}
-{OTHERWISE} {printf("Error type A at Line %d: Mysterious characters \'%s\'\n",yylineno,yytext);}
+{OTHERWISE} {printf("Error type A at Line %d: Mysterious character \'%s\'\n",yylineno,yytext);}
 %%
 int yyerror(const char *msg) 
 {
