@@ -1092,13 +1092,13 @@ YY_RULE_SETUP
 case 36:
 YY_RULE_SETUP
 #line 170 "./lexical.l"
-{printf("commented line\n");}
+{}
 	YY_BREAK
 case 37:
 /* rule 37 can match eol */
 YY_RULE_SETUP
 #line 171 "./lexical.l"
-{printf("commented block\n");}
+{}
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
@@ -2131,9 +2131,9 @@ void yyfree (void * ptr )
 
 int yyerror(const char *msg) 
 {
-    fprintf(stderr, "Error: %s\n", msg);
+    fprintf(stderr, "Error type B at Line %d: %s\n", yylineno, msg);
     no_syntax_error=0;
-    return 0;
+    return 1;
 }
 
 

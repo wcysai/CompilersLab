@@ -29,10 +29,10 @@ EXPONENTIAL_FORM [E|e][+|-]?{digit}+
 FLOAT {digit}*(\.{digit}*|(\.{digit}*{EXPONENTIAL_FORM}))
 LZ 0{NON_ZERO_INT}
 LINE_COMMENT "//".*
-BLOCK_COMMENT_START \/\*
-BLOCK_COMMENT_END \*\/
+BLOCK_COMMENT_START "/*"
+BLOCK_COMMENT_END "*/"
 COMMENTED_LINE {LINE_COMMENT}.*
-COMMENTED_BLOCK {BLOCK_COMMENT_START}([^*]|(\*+[^*/]))*{BLOCK_COMMENT_END}
+COMMENTED_BLOCK {BLOCK_COMMENT_START}([^\*]|(\*+[^*/]))*{BLOCK_COMMENT_END}
 WHITESPACE [ \t]
 SEMI ;
 COMMA ,
@@ -167,14 +167,14 @@ NEWLINE \n
     yylval->doubleval=x;
     return FLOAT;
 }
-{COMMENTED_LINE} {printf("commented line\n");}
-{COMMENTED_BLOCK} {printf("commented block\n");}
+{COMMENTED_LINE} {}
+{COMMENTED_BLOCK} {}
 {OTHERWISE} {printf("Error type A at Line %d: Mysterious character \'%s\'\n",yylineno,yytext); no_syntax_error=0;}
 %%
 int yyerror(const char *msg) 
 {
-    fprintf(stderr, "Error: %s\n", msg);
+    fprintf(stderr, "Error type B at Line %d: %s\n", yylineno, msg);
     no_syntax_error=0;
-    return 0;
+    return 1;
 }
 
