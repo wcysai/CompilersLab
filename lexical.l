@@ -130,7 +130,11 @@ NEWLINE \n
     yylval->intval=x;
     return INT;
     }
-{LZ} {printf("Error type A at Line %d: illegal leading zeroes detected\n",yylineno); no_syntax_error=0;}
+{LZ} {
+    printf("Error type A at Line %d: illegal leading zeroes detected\n",yylineno); no_syntax_error=0; yylval=newast("INT",0,yylineno,"");
+    yylval->intval=0;
+    return INT;
+    }
 {FLOAT} {
     double x=0.0;
     while(*yytext!='.')
@@ -175,6 +179,6 @@ int yyerror(const char *msg)
 {
     fprintf(stderr, "Error type B at Line %d: %s\n", yylineno, msg);
     no_syntax_error=0;
-    return 1;
+    return 0;
 }
 
