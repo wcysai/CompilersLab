@@ -110,6 +110,7 @@ VarDec: ID{ //1
         $$=newast("VarDec",2,@$.first_line,"");
         add_child($$,$1); add_sibling($1,$2); add_sibling($2,$3); add_sibling($3,$4); 
     }
+    | error RB
     ;
 FunDec: ID LP VarList RP { //1
         $$=newast("FunDec",1,@$.first_line,"");
@@ -139,6 +140,7 @@ CompSt: LC DefList StmtList RC{ //1
         $$=newast("CompSt",1,@$.first_line,"");
         add_child($$,$1); add_sibling($1,$2); add_sibling($2,$3); add_sibling($3,$4);
     }
+    | error RC
     ;
 StmtList: Stmt StmtList { //1
         $$=newast("StmtList",1,@$.first_line,"");
@@ -170,6 +172,8 @@ Stmt: Exp SEMI { //1
         $$=newast("Stmt",6,@$.first_line,"");
         add_child($$,$1); add_sibling($1,$2); add_sibling($2,$3); add_sibling($3,$4); add_sibling($4,$5);
     }
+    | error SEMI
+    | error
     ;
 
 DefList: Def DefList { //1
