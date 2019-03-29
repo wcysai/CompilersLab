@@ -1047,11 +1047,15 @@ YY_RULE_SETUP
 case 34:
 YY_RULE_SETUP
 #line 133 "./lexical.l"
-{printf("Error type A at Line %d: illegal leading zeroes detected\n",yylineno); no_syntax_error=0;}
+{
+    printf("Error type A at Line %d: illegal leading zeroes detected\n",yylineno); no_syntax_error=0; yylval=newast("INT",0,yylineno,"");
+    yylval->intval=0;
+    return INT;
+    }
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 134 "./lexical.l"
+#line 138 "./lexical.l"
 {
     double x=0.0;
     while(*yytext!='.')
@@ -1091,26 +1095,26 @@ YY_RULE_SETUP
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 170 "./lexical.l"
+#line 174 "./lexical.l"
 {}
 	YY_BREAK
 case 37:
 /* rule 37 can match eol */
 YY_RULE_SETUP
-#line 171 "./lexical.l"
+#line 175 "./lexical.l"
 {}
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 172 "./lexical.l"
+#line 176 "./lexical.l"
 {printf("Error type A at Line %d: Mysterious character \'%s\'\n",yylineno,yytext); no_syntax_error=0;}
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 173 "./lexical.l"
+#line 177 "./lexical.l"
 YY_FATAL_ERROR( "flex scanner jammed" );
 	YY_BREAK
-#line 1114 "./lex.yy.c"
+#line 1118 "./lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2127,13 +2131,13 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 173 "./lexical.l"
+#line 177 "./lexical.l"
 
 int yyerror(const char *msg) 
 {
     fprintf(stderr, "Error type B at Line %d: %s\n", yylineno, msg);
     no_syntax_error=0;
-    return 1;
+    return 0;
 }
 
 

@@ -33,7 +33,6 @@ void add_sibling(struct ast *node, struct ast *sibling)
 {
     if(node==NULL) return;
     if(node->sibling==NULL) node->sibling=sibling;
-    else assert(0);
 }
 
 void print_ast(struct ast *node,int tabs)
