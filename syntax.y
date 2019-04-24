@@ -140,7 +140,6 @@ CompSt: LC DefList StmtList RC{ //1
         $$=newast("CompSt",1,@$.first_line,"");
         add_child($$,$1); add_sibling($1,$2); add_sibling($2,$3); add_sibling($3,$4);
     }
-    | error RC
     ;
 StmtList: Stmt StmtList { //1
         $$=newast("StmtList",1,@$.first_line,"");
@@ -325,6 +324,7 @@ int main(int argc, char** argv)
     no_syntax_error=1;
     yylval=malloc(sizeof(struct ast));
     yyrestart(f);
+    trieinit();
     //yydebug=1;
     yyparse();
     if(no_syntax_error) print_ast(root,0);

@@ -1,4 +1,5 @@
 #include <stdio.h>
+
 #include <stdlib.h>
 #include <stdarg.h>
 #include <assert.h>
@@ -12,12 +13,6 @@ int find_id(char x)
     else return 36+x-'a';
 }
 
-struct trie
-{
-    struct trie* next[60];
-    struct symbol *sym;
-};
-
 
 struct trie *newnode()
 {
@@ -30,14 +25,14 @@ struct trie *newnode()
 struct trie *func,*var,*str;
 //trie root node for functions,variables,and structs respectively
 
-void TrieInit()
+void trieinit()
 {
     func=newnode(); var=newnode(); str=newnode();
 }
 
 //insert a new symbol into trie
 //type=0,1,2 : function,variable, struct
-bool TrieInsert(struct symbol* sym,int type)
+bool trieinsert(struct symbol* sym,int type)
 {
     struct trie* s=(!type?func:(type==1?var:str));
     char *x=sym->name;
@@ -57,15 +52,30 @@ bool TrieInsert(struct symbol* sym,int type)
     return f;
 }
 //check if some symbol exists in the trie
-bool TrieFind(struct symbol* sym,int type)
+struct symbol *lookup(char *name,int type)
+{
+    struct trie* s=(!type?func:(type==1?var:str));
+    char *x=name;
+    for(int i=0;x[i];i++)
+    {
+        int id=find_id(x[i]);
+        if(s->next[id]) {s=s->next[id];}
+        else return NULL;
+    }
+    return s->sym;
+}
+//delete a symbol from trie
+bool triedelete(struct symbol* sym,int type)
 {
     struct trie* s=(!type?func:(type==1?var:str));
     char *x=sym->name;
     for(int i=0;x[i];i++)
     {
         int id=find_id(x[i]);
-        if(s->next[id]) {s=s->next[id];}
-        else return false;
+        s=s->next[id];
+        if(s==NULL) return false;
     }
-    return (s->sym!=NULL);
+    if(s->sym==NULL) return false;
+    s->sym=NULL;
+    return true;
 }
