@@ -1483,7 +1483,7 @@ yyreduce:
 
   case 4:
 #line 53 "./syntax.y" /* yacc.c:1646  */
-    {(yyval)=NULL;}
+    {(yyval)=newast("Empty",2,(yyloc).first_line,"");}
 #line 1488 "./syntax.tab.c" /* yacc.c:1646  */
     break;
 
@@ -1579,7 +1579,7 @@ yyreduce:
 
   case 15:
 #line 98 "./syntax.y" /* yacc.c:1646  */
-    {(yyval)=NULL;}
+    {(yyval)=newast("Empty",2,(yyloc).first_line,"");}
 #line 1584 "./syntax.tab.c" /* yacc.c:1646  */
     break;
 
@@ -1676,7 +1676,7 @@ yyreduce:
 
   case 28:
 #line 149 "./syntax.y" /* yacc.c:1646  */
-    {(yyval)=NULL;}
+    {(yyval)=newast("Empty",2,(yyloc).first_line,"");}
 #line 1681 "./syntax.tab.c" /* yacc.c:1646  */
     break;
 
@@ -1745,7 +1745,7 @@ yyreduce:
 
   case 38:
 #line 183 "./syntax.y" /* yacc.c:1646  */
-    {(yyval)=NULL;}
+    {(yyval)=newast("Empty",2,(yyloc).first_line,"");}
 #line 1750 "./syntax.tab.c" /* yacc.c:1646  */
     break;
 

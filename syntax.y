@@ -50,7 +50,7 @@ ExtDefList: ExtDef ExtDefList { //1
         $$=newast("ExtDefList",1,@$.first_line,"");
         add_child($$,$1); add_sibling($1,$2);
     }
-    | {$$=NULL;} //2
+    | {$$=newast("Empty",2,@$.first_line,"");} //2
     ;
 ExtDef: Specifier ExtDecList SEMI { //1
         $$=newast("ExtDef",1,@$.first_line,"");
@@ -95,7 +95,7 @@ OptTag: ID { //1
         $$=newast("OptTag",1,@$.first_line,"");
         add_child($$,$1); 
     }
-    | {$$=NULL;} //2
+    | {$$=newast("Empty",2,@$.first_line,"");} //2
     ;
 Tag: ID { //1
         $$=newast("Tag",1,@$.first_line,"");
@@ -146,7 +146,7 @@ StmtList: Stmt StmtList { //1
         $$=newast("StmtList",1,@$.first_line,"");
         add_child($$,$1); add_sibling($1,$2);
     }
-    | {$$=NULL;} //2
+    | {$$=newast("Empty",2,@$.first_line,"");} //2
     ;
 Stmt: Exp SEMI { //1
         $$=newast("Stmt",1,@$.first_line,"");
@@ -180,7 +180,7 @@ DefList: Def DefList { //1
         $$=newast("DefList",1,@$.first_line,"");
         add_child($$,$1); add_sibling($1,$2);
     }
-    | {$$=NULL;} //2
+    | {$$=newast("Empty",2,@$.first_line,"");} //2
     ;
 
 Def: Specifier DecList SEMI { //1
