@@ -71,7 +71,7 @@ ExtDecList: VarDec { //1
     }
     | VarDec COMMA ExtDecList { //2
         $$=newast("ExtDecList",1,@$.first_line,"");
-        add_child($$,$1);  add_sibling($1,$2); add_sibling($1,$3); 
+        add_child($$,$1);  add_sibling($1,$2); add_sibling($2,$3); 
     }
 Specifier: TYPE { //1
         $$=newast("Specifier",1,@$.first_line,"");
