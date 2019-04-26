@@ -7,8 +7,11 @@ struct ast
     char *nodetype; //a string that represents what type the node is
     char *nodename; // the name of the node
     int opnum; //operation id, for calculating the value of a node
-    double doubleval; //double value for the node
-    int intval; //int value for the node
+    union
+    {
+        double doubleval; //double value for the node
+        int intval; //int value for the node
+    }val;
     int lineno; //the line where the node presents
     struct ast *child; //child of the current node(if exists)
     struct ast *sibling; //sibling of the current node(if exists)
@@ -19,6 +22,8 @@ struct numval
     int nodetype;
     double number;
 };
+
+enum {Variable,Function,Struct} SymbolType;
 
 typedef struct Type_* Type;
 typedef struct FieldList_* FieldList;
@@ -39,6 +44,9 @@ struct FieldList_
     Type type; 
     FieldList tail; 
 };
+
+bool SameType(Type p,Type q);
+bool SameField(FieldList p,FieldList q);
 
 struct symbol
 {

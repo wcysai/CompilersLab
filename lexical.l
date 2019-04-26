@@ -127,12 +127,12 @@ NEWLINE \n
         x=atoi(yytext);
     }
     yylval=newast("INT",0,yylineno,"");
-    yylval->intval=x;
+    yylval->val.intval=x;
     return INT;
     }
 {LZ} {
     printf("Error type A at Line %d: illegal leading zeroes detected\n",yylineno); no_syntax_error=0; yylval=newast("INT",0,yylineno,"");
-    yylval->intval=0;
+    yylval->val.intval=0;
     return INT;
     }
 {FLOAT} {
@@ -168,7 +168,7 @@ NEWLINE \n
     }
     else if(*yytext=='\0');   
     yylval=newast("FLOAT",0,yylineno,"");
-    yylval->doubleval=x;
+    yylval->val.doubleval=x;
     return FLOAT;
 }
 {COMMENTED_LINE} {}
