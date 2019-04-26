@@ -70,7 +70,7 @@
     #include<assert.h>
     #include "defi.h"
     #include"lex.yy.c"
-    struct ast *root;
+    ast root;    
     int no_syntax_error;
 
 #line 77 "./syntax.tab.c" /* yacc.c:339  */
@@ -147,7 +147,7 @@ extern int yydebug;
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-typedef struct ast* YYSTYPE;
+typedef ast YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
 #endif
@@ -479,12 +479,12 @@ static const yytype_uint8 yytranslate[] =
 static const yytype_uint16 yyrline[] =
 {
        0,    44,    44,    49,    53,    55,    59,    63,    68,    72,
-      76,    80,    85,    89,    94,    98,   100,   105,   109,   113,
-     115,   119,   125,   129,   134,   139,   144,   148,   150,   154,
-     158,   162,   166,   170,   174,   175,   178,   182,   185,   191,
-     195,   201,   205,   211,   215,   219,   223,   227,   231,   235,
-     239,   243,   247,   251,   255,   259,   263,   267,   271,   275,
-     279,   283,   287,   291,   295,   299,   305,   309
+      77,    81,    86,    90,    95,    99,   101,   106,   110,   114,
+     116,   120,   126,   130,   135,   140,   145,   149,   151,   155,
+     159,   163,   167,   171,   175,   176,   179,   183,   186,   192,
+     196,   202,   206,   212,   216,   220,   224,   228,   232,   236,
+     240,   244,   248,   252,   256,   260,   264,   268,   272,   276,
+     280,   284,   288,   292,   296,   300,   306,   310
 };
 #endif
 
@@ -1527,13 +1527,13 @@ yyreduce:
 #line 72 "./syntax.y" /* yacc.c:1646  */
     { //2
         (yyval)=newast("ExtDecList",1,(yyloc).first_line,"");
-        add_child((yyval),(yyvsp[-2]));  add_sibling((yyvsp[-2]),(yyvsp[-1])); add_sibling((yyvsp[-2]),(yyvsp[0])); 
+        add_child((yyval),(yyvsp[-2]));  add_sibling((yyvsp[-2]),(yyvsp[-1])); add_sibling((yyvsp[-1]),(yyvsp[0])); 
     }
 #line 1533 "./syntax.tab.c" /* yacc.c:1646  */
     break;
 
   case 10:
-#line 76 "./syntax.y" /* yacc.c:1646  */
+#line 77 "./syntax.y" /* yacc.c:1646  */
     { //1
         (yyval)=newast("Specifier",1,(yyloc).first_line,"");
         add_child((yyval),(yyvsp[0])); 
@@ -1542,7 +1542,7 @@ yyreduce:
     break;
 
   case 11:
-#line 80 "./syntax.y" /* yacc.c:1646  */
+#line 81 "./syntax.y" /* yacc.c:1646  */
     { //2
         (yyval)=newast("Specifier",2,(yyloc).first_line,"");
         add_child((yyval),(yyvsp[0])); 
@@ -1551,7 +1551,7 @@ yyreduce:
     break;
 
   case 12:
-#line 85 "./syntax.y" /* yacc.c:1646  */
+#line 86 "./syntax.y" /* yacc.c:1646  */
     { //1
         (yyval)=newast("StructSpecifier",1,(yyloc).first_line,"");
         add_child((yyval),(yyvsp[-4])); add_sibling((yyvsp[-4]),(yyvsp[-3])); add_sibling((yyvsp[-3]),(yyvsp[-2])); add_sibling((yyvsp[-2]),(yyvsp[-1])); add_sibling((yyvsp[-1]),(yyvsp[0])); 
@@ -1560,7 +1560,7 @@ yyreduce:
     break;
 
   case 13:
-#line 89 "./syntax.y" /* yacc.c:1646  */
+#line 90 "./syntax.y" /* yacc.c:1646  */
     { //2
         (yyval)=newast("StructSpecifier",2,(yyloc).first_line,"");
         add_child((yyval),(yyvsp[-1])); add_sibling((yyvsp[-1]),(yyvsp[0])); 
@@ -1569,7 +1569,7 @@ yyreduce:
     break;
 
   case 14:
-#line 94 "./syntax.y" /* yacc.c:1646  */
+#line 95 "./syntax.y" /* yacc.c:1646  */
     { //1
         (yyval)=newast("OptTag",1,(yyloc).first_line,"");
         add_child((yyval),(yyvsp[0])); 
@@ -1578,13 +1578,13 @@ yyreduce:
     break;
 
   case 15:
-#line 98 "./syntax.y" /* yacc.c:1646  */
+#line 99 "./syntax.y" /* yacc.c:1646  */
     {(yyval)=newast("Empty",2,(yyloc).first_line,"");}
 #line 1584 "./syntax.tab.c" /* yacc.c:1646  */
     break;
 
   case 16:
-#line 100 "./syntax.y" /* yacc.c:1646  */
+#line 101 "./syntax.y" /* yacc.c:1646  */
     { //1
         (yyval)=newast("Tag",1,(yyloc).first_line,"");
         add_child((yyval),(yyvsp[0])); 
@@ -1593,7 +1593,7 @@ yyreduce:
     break;
 
   case 17:
-#line 105 "./syntax.y" /* yacc.c:1646  */
+#line 106 "./syntax.y" /* yacc.c:1646  */
     { //1
         (yyval)=newast("VarDec",1,(yyloc).first_line,"");
         add_child((yyval),(yyvsp[0])); 
@@ -1602,7 +1602,7 @@ yyreduce:
     break;
 
   case 18:
-#line 109 "./syntax.y" /* yacc.c:1646  */
+#line 110 "./syntax.y" /* yacc.c:1646  */
     { //2
         (yyval)=newast("VarDec",2,(yyloc).first_line,"");
         add_child((yyval),(yyvsp[-3])); add_sibling((yyvsp[-3]),(yyvsp[-2])); add_sibling((yyvsp[-2]),(yyvsp[-1])); add_sibling((yyvsp[-1]),(yyvsp[0])); 
@@ -1611,7 +1611,7 @@ yyreduce:
     break;
 
   case 20:
-#line 115 "./syntax.y" /* yacc.c:1646  */
+#line 116 "./syntax.y" /* yacc.c:1646  */
     { //1
         (yyval)=newast("FunDec",1,(yyloc).first_line,"");
         add_child((yyval),(yyvsp[-3])); add_sibling((yyvsp[-3]),(yyvsp[-2])); add_sibling((yyvsp[-2]),(yyvsp[-1])); add_sibling((yyvsp[-1]),(yyvsp[0]));
@@ -1620,7 +1620,7 @@ yyreduce:
     break;
 
   case 21:
-#line 119 "./syntax.y" /* yacc.c:1646  */
+#line 120 "./syntax.y" /* yacc.c:1646  */
     { //2
         (yyval)=newast("FunDec",2,(yyloc).first_line,"");
         //printf("found ID: %s\n",$1->nodename);
@@ -1630,7 +1630,7 @@ yyreduce:
     break;
 
   case 22:
-#line 125 "./syntax.y" /* yacc.c:1646  */
+#line 126 "./syntax.y" /* yacc.c:1646  */
     { //1
         (yyval)=newast("VarList",1,(yyloc).first_line,"");
         add_child((yyval),(yyvsp[-2])); add_sibling((yyvsp[-2]),(yyvsp[-1])); add_sibling((yyvsp[-1]),(yyvsp[0])); 
@@ -1639,7 +1639,7 @@ yyreduce:
     break;
 
   case 23:
-#line 129 "./syntax.y" /* yacc.c:1646  */
+#line 130 "./syntax.y" /* yacc.c:1646  */
     { //2
         (yyval)=newast("VarList",2,(yyloc).first_line,"");
         add_child((yyval),(yyvsp[0])); 
@@ -1648,7 +1648,7 @@ yyreduce:
     break;
 
   case 24:
-#line 134 "./syntax.y" /* yacc.c:1646  */
+#line 135 "./syntax.y" /* yacc.c:1646  */
     { //1
         (yyval)=newast("ParamDec",1,(yyloc).first_line,"");
         add_child((yyval),(yyvsp[-1])); add_sibling((yyvsp[-1]),(yyvsp[0])); 
@@ -1657,7 +1657,7 @@ yyreduce:
     break;
 
   case 25:
-#line 139 "./syntax.y" /* yacc.c:1646  */
+#line 140 "./syntax.y" /* yacc.c:1646  */
     { //1
         (yyval)=newast("CompSt",1,(yyloc).first_line,"");
         add_child((yyval),(yyvsp[-3])); add_sibling((yyvsp[-3]),(yyvsp[-2])); add_sibling((yyvsp[-2]),(yyvsp[-1])); add_sibling((yyvsp[-1]),(yyvsp[0]));
@@ -1666,7 +1666,7 @@ yyreduce:
     break;
 
   case 26:
-#line 144 "./syntax.y" /* yacc.c:1646  */
+#line 145 "./syntax.y" /* yacc.c:1646  */
     { //1
         (yyval)=newast("StmtList",1,(yyloc).first_line,"");
         add_child((yyval),(yyvsp[-1])); add_sibling((yyvsp[-1]),(yyvsp[0]));
@@ -1675,13 +1675,13 @@ yyreduce:
     break;
 
   case 27:
-#line 148 "./syntax.y" /* yacc.c:1646  */
+#line 149 "./syntax.y" /* yacc.c:1646  */
     {(yyval)=newast("Empty",2,(yyloc).first_line,"");}
 #line 1681 "./syntax.tab.c" /* yacc.c:1646  */
     break;
 
   case 28:
-#line 150 "./syntax.y" /* yacc.c:1646  */
+#line 151 "./syntax.y" /* yacc.c:1646  */
     { //1
         (yyval)=newast("Stmt",1,(yyloc).first_line,"");
         add_child((yyval),(yyvsp[-1])); add_sibling((yyvsp[-1]),(yyvsp[0])); 
@@ -1690,7 +1690,7 @@ yyreduce:
     break;
 
   case 29:
-#line 154 "./syntax.y" /* yacc.c:1646  */
+#line 155 "./syntax.y" /* yacc.c:1646  */
     { //2
         (yyval)=newast("Stmt",2,(yyloc).first_line,"");
         add_child((yyval),(yyvsp[0])); 
@@ -1699,7 +1699,7 @@ yyreduce:
     break;
 
   case 30:
-#line 158 "./syntax.y" /* yacc.c:1646  */
+#line 159 "./syntax.y" /* yacc.c:1646  */
     { //3
         (yyval)=newast("Stmt",3,(yyloc).first_line,"");
         add_child((yyval),(yyvsp[-2])); add_sibling((yyvsp[-2]),(yyvsp[-1])); add_sibling((yyvsp[-1]),(yyvsp[0])); 
@@ -1708,7 +1708,7 @@ yyreduce:
     break;
 
   case 31:
-#line 162 "./syntax.y" /* yacc.c:1646  */
+#line 163 "./syntax.y" /* yacc.c:1646  */
     { //4
         (yyval)=newast("Stmt",4,(yyloc).first_line,"");
         add_child((yyval),(yyvsp[-4])); add_sibling((yyvsp[-4]),(yyvsp[-3])); add_sibling((yyvsp[-3]),(yyvsp[-2])); add_sibling((yyvsp[-2]),(yyvsp[-1])); add_sibling((yyvsp[-1]),(yyvsp[0])); 
@@ -1717,7 +1717,7 @@ yyreduce:
     break;
 
   case 32:
-#line 166 "./syntax.y" /* yacc.c:1646  */
+#line 167 "./syntax.y" /* yacc.c:1646  */
     { //5
         (yyval)=newast("Stmt",5,(yyloc).first_line,"");
         add_child((yyval),(yyvsp[-6])); add_sibling((yyvsp[-6]),(yyvsp[-5])); add_sibling((yyvsp[-5]),(yyvsp[-4])); add_sibling((yyvsp[-4]),(yyvsp[-3])); add_sibling((yyvsp[-3]),(yyvsp[-2])); add_child((yyvsp[-2]),(yyvsp[-1])); add_sibling((yyvsp[-1]),(yyvsp[0])); 
@@ -1726,7 +1726,7 @@ yyreduce:
     break;
 
   case 33:
-#line 170 "./syntax.y" /* yacc.c:1646  */
+#line 171 "./syntax.y" /* yacc.c:1646  */
     { // 6
         (yyval)=newast("Stmt",6,(yyloc).first_line,"");
         add_child((yyval),(yyvsp[-4])); add_sibling((yyvsp[-4]),(yyvsp[-3])); add_sibling((yyvsp[-3]),(yyvsp[-2])); add_sibling((yyvsp[-2]),(yyvsp[-1])); add_sibling((yyvsp[-1]),(yyvsp[0]));
@@ -1735,7 +1735,7 @@ yyreduce:
     break;
 
   case 36:
-#line 178 "./syntax.y" /* yacc.c:1646  */
+#line 179 "./syntax.y" /* yacc.c:1646  */
     { //1
         (yyval)=newast("DefList",1,(yyloc).first_line,"");
         add_child((yyval),(yyvsp[-1])); add_sibling((yyvsp[-1]),(yyvsp[0]));
@@ -1744,13 +1744,13 @@ yyreduce:
     break;
 
   case 37:
-#line 182 "./syntax.y" /* yacc.c:1646  */
+#line 183 "./syntax.y" /* yacc.c:1646  */
     {(yyval)=newast("Empty",2,(yyloc).first_line,"");}
 #line 1750 "./syntax.tab.c" /* yacc.c:1646  */
     break;
 
   case 38:
-#line 185 "./syntax.y" /* yacc.c:1646  */
+#line 186 "./syntax.y" /* yacc.c:1646  */
     { //1
         (yyval)=newast("Def",1,(yyloc).first_line,"");
         add_child((yyval),(yyvsp[-2])); add_sibling((yyvsp[-2]),(yyvsp[-1])); add_sibling((yyvsp[-1]),(yyvsp[0]));
@@ -1759,7 +1759,7 @@ yyreduce:
     break;
 
   case 39:
-#line 191 "./syntax.y" /* yacc.c:1646  */
+#line 192 "./syntax.y" /* yacc.c:1646  */
     { //1
         (yyval)=newast("DecList",1,(yyloc).first_line,"");
         add_child((yyval),(yyvsp[0]));
@@ -1768,7 +1768,7 @@ yyreduce:
     break;
 
   case 40:
-#line 195 "./syntax.y" /* yacc.c:1646  */
+#line 196 "./syntax.y" /* yacc.c:1646  */
     { //2
         (yyval)=newast("DecList",2,(yyloc).first_line,"");
         add_child((yyval),(yyvsp[-2])); add_sibling((yyvsp[-2]),(yyvsp[-1])); add_sibling((yyvsp[-1]),(yyvsp[0]));
@@ -1777,7 +1777,7 @@ yyreduce:
     break;
 
   case 41:
-#line 201 "./syntax.y" /* yacc.c:1646  */
+#line 202 "./syntax.y" /* yacc.c:1646  */
     { //1
         (yyval)=newast("Dec",1,(yyloc).first_line,"");
         add_child((yyval),(yyvsp[0]));
@@ -1786,7 +1786,7 @@ yyreduce:
     break;
 
   case 42:
-#line 205 "./syntax.y" /* yacc.c:1646  */
+#line 206 "./syntax.y" /* yacc.c:1646  */
     { //2
         (yyval)=newast("Dec",2,(yyloc).first_line,"");
         add_child((yyval),(yyvsp[-2])); add_sibling((yyvsp[-2]),(yyvsp[-1])); add_sibling((yyvsp[-1]),(yyvsp[0]));
@@ -1795,7 +1795,7 @@ yyreduce:
     break;
 
   case 43:
-#line 211 "./syntax.y" /* yacc.c:1646  */
+#line 212 "./syntax.y" /* yacc.c:1646  */
     { //1
         (yyval)=newast("Exp",1,(yyloc).first_line,"");
         add_child((yyval),(yyvsp[0]));
@@ -1804,7 +1804,7 @@ yyreduce:
     break;
 
   case 44:
-#line 215 "./syntax.y" /* yacc.c:1646  */
+#line 216 "./syntax.y" /* yacc.c:1646  */
     { //2
         (yyval)=newast("Exp",1,(yyloc).first_line,"");
         add_child((yyval),(yyvsp[0]));
@@ -1813,7 +1813,7 @@ yyreduce:
     break;
 
   case 45:
-#line 219 "./syntax.y" /* yacc.c:1646  */
+#line 220 "./syntax.y" /* yacc.c:1646  */
     { //3
         (yyval)=newast("Exp",1,(yyloc).first_line,"");
         add_child((yyval),(yyvsp[0]));
@@ -1822,7 +1822,7 @@ yyreduce:
     break;
 
   case 46:
-#line 223 "./syntax.y" /* yacc.c:1646  */
+#line 224 "./syntax.y" /* yacc.c:1646  */
     { //4
         (yyval)=newast("Exp",4,(yyloc).first_line,""); 
         add_child((yyval),(yyvsp[-2])); add_sibling((yyvsp[-2]),(yyvsp[-1])); add_sibling((yyvsp[-1]),(yyvsp[0]));
@@ -1831,7 +1831,7 @@ yyreduce:
     break;
 
   case 47:
-#line 227 "./syntax.y" /* yacc.c:1646  */
+#line 228 "./syntax.y" /* yacc.c:1646  */
     { //5
         (yyval)=newast("Exp",5,(yyloc).first_line,""); 
         add_child((yyval),(yyvsp[-2])); add_sibling((yyvsp[-2]),(yyvsp[-1])); add_sibling((yyvsp[-1]),(yyvsp[0]));
@@ -1840,7 +1840,7 @@ yyreduce:
     break;
 
   case 48:
-#line 231 "./syntax.y" /* yacc.c:1646  */
+#line 232 "./syntax.y" /* yacc.c:1646  */
     {  //6
         (yyval)=newast("Exp",6,(yyloc).first_line,""); 
         add_child((yyval),(yyvsp[-2])); add_sibling((yyvsp[-2]),(yyvsp[-1])); add_sibling((yyvsp[-1]),(yyvsp[0]));
@@ -1849,7 +1849,7 @@ yyreduce:
     break;
 
   case 49:
-#line 235 "./syntax.y" /* yacc.c:1646  */
+#line 236 "./syntax.y" /* yacc.c:1646  */
     { //7
         (yyval)=newast("Exp",7,(yyloc).first_line,""); 
         add_child((yyval),(yyvsp[-2])); add_sibling((yyvsp[-2]),(yyvsp[-1])); add_sibling((yyvsp[-1]),(yyvsp[0]));
@@ -1858,7 +1858,7 @@ yyreduce:
     break;
 
   case 50:
-#line 239 "./syntax.y" /* yacc.c:1646  */
+#line 240 "./syntax.y" /* yacc.c:1646  */
     { //8
         (yyval)=newast("Exp",8,(yyloc).first_line,""); 
         add_child((yyval),(yyvsp[-2])); add_sibling((yyvsp[-2]),(yyvsp[-1])); add_sibling((yyvsp[-1]),(yyvsp[0]));
@@ -1867,7 +1867,7 @@ yyreduce:
     break;
 
   case 51:
-#line 243 "./syntax.y" /* yacc.c:1646  */
+#line 244 "./syntax.y" /* yacc.c:1646  */
     { //9
         (yyval)=newast("Exp",9,(yyloc).first_line,""); 
         add_child((yyval),(yyvsp[-2])); add_sibling((yyvsp[-2]),(yyvsp[-1])); add_sibling((yyvsp[-1]),(yyvsp[0]));
@@ -1876,7 +1876,7 @@ yyreduce:
     break;
 
   case 52:
-#line 247 "./syntax.y" /* yacc.c:1646  */
+#line 248 "./syntax.y" /* yacc.c:1646  */
     { //10
         (yyval)=newast("Exp",10,(yyloc).first_line,""); 
         add_child((yyval),(yyvsp[-2])); add_sibling((yyvsp[-2]),(yyvsp[-1])); add_sibling((yyvsp[-1]),(yyvsp[0]));
@@ -1885,7 +1885,7 @@ yyreduce:
     break;
 
   case 53:
-#line 251 "./syntax.y" /* yacc.c:1646  */
+#line 252 "./syntax.y" /* yacc.c:1646  */
     {  //11
         (yyval)=newast("Exp",11,(yyloc).first_line,""); 
         add_child((yyval),(yyvsp[-2])); add_sibling((yyvsp[-2]),(yyvsp[-1])); add_sibling((yyvsp[-1]),(yyvsp[0]));
@@ -1894,7 +1894,7 @@ yyreduce:
     break;
 
   case 54:
-#line 255 "./syntax.y" /* yacc.c:1646  */
+#line 256 "./syntax.y" /* yacc.c:1646  */
     {  //12
         (yyval)=newast("Exp",12,(yyloc).first_line,""); 
         add_child((yyval),(yyvsp[-2])); add_sibling((yyvsp[-2]),(yyvsp[-1])); add_sibling((yyvsp[-1]),(yyvsp[0]));
@@ -1903,7 +1903,7 @@ yyreduce:
     break;
 
   case 55:
-#line 259 "./syntax.y" /* yacc.c:1646  */
+#line 260 "./syntax.y" /* yacc.c:1646  */
     { //13
         (yyval)=newast("Exp",13,(yyloc).first_line,""); 
         add_child((yyval),(yyvsp[-2])); add_sibling((yyvsp[-2]),(yyvsp[-1])); add_sibling((yyvsp[-1]),(yyvsp[0]));
@@ -1912,7 +1912,7 @@ yyreduce:
     break;
 
   case 56:
-#line 263 "./syntax.y" /* yacc.c:1646  */
+#line 264 "./syntax.y" /* yacc.c:1646  */
     { //14
         (yyval)=newast("Exp",14,(yyloc).first_line,""); 
         add_child((yyval),(yyvsp[-2])); add_sibling((yyvsp[-2]),(yyvsp[-1])); add_sibling((yyvsp[-1]),(yyvsp[0]));
@@ -1921,7 +1921,7 @@ yyreduce:
     break;
 
   case 57:
-#line 267 "./syntax.y" /* yacc.c:1646  */
+#line 268 "./syntax.y" /* yacc.c:1646  */
     { //15
         (yyval)=newast("Exp",15,(yyloc).first_line,""); 
         add_child((yyval),(yyvsp[-2])); add_sibling((yyvsp[-2]),(yyvsp[-1])); add_sibling((yyvsp[-1]),(yyvsp[0]));
@@ -1930,7 +1930,7 @@ yyreduce:
     break;
 
   case 58:
-#line 271 "./syntax.y" /* yacc.c:1646  */
+#line 272 "./syntax.y" /* yacc.c:1646  */
     {  //16
         (yyval)=newast("Exp",16,(yyloc).first_line,""); 
         add_child((yyval),(yyvsp[-2])); add_sibling((yyvsp[-2]),(yyvsp[-1])); add_sibling((yyvsp[-1]),(yyvsp[0]));
@@ -1939,7 +1939,7 @@ yyreduce:
     break;
 
   case 59:
-#line 275 "./syntax.y" /* yacc.c:1646  */
+#line 276 "./syntax.y" /* yacc.c:1646  */
     {  //17
         (yyval)=newast("Exp",17,(yyloc).first_line,""); 
         add_child((yyval),(yyvsp[-2])); add_sibling((yyvsp[-2]),(yyvsp[-1])); add_sibling((yyvsp[-1]),(yyvsp[0]));
@@ -1948,7 +1948,7 @@ yyreduce:
     break;
 
   case 60:
-#line 279 "./syntax.y" /* yacc.c:1646  */
+#line 280 "./syntax.y" /* yacc.c:1646  */
     {  //18
         (yyval)=newast("Exp",18,(yyloc).first_line,""); 
         add_child((yyval),(yyvsp[-1])); add_sibling((yyvsp[-1]),(yyvsp[0]));
@@ -1957,7 +1957,7 @@ yyreduce:
     break;
 
   case 61:
-#line 283 "./syntax.y" /* yacc.c:1646  */
+#line 284 "./syntax.y" /* yacc.c:1646  */
     { //19
         (yyval)=newast("Exp",19,(yyloc).first_line,""); 
         add_child((yyval),(yyvsp[-1])); add_sibling((yyvsp[-1]),(yyvsp[0]));
@@ -1966,7 +1966,7 @@ yyreduce:
     break;
 
   case 62:
-#line 287 "./syntax.y" /* yacc.c:1646  */
+#line 288 "./syntax.y" /* yacc.c:1646  */
     {  //20
         (yyval)=newast("Exp",20,(yyloc).first_line,""); 
         add_child((yyval),(yyvsp[-3])); add_sibling((yyvsp[-3]),(yyvsp[-2])); add_sibling((yyvsp[-2]),(yyvsp[-1])); add_sibling((yyvsp[-1]),(yyvsp[0]));
@@ -1975,7 +1975,7 @@ yyreduce:
     break;
 
   case 63:
-#line 291 "./syntax.y" /* yacc.c:1646  */
+#line 292 "./syntax.y" /* yacc.c:1646  */
     { //21
         (yyval)=newast("Exp",21,(yyloc).first_line,""); 
         add_child((yyval),(yyvsp[-2])); add_sibling((yyvsp[-2]),(yyvsp[-1])); add_sibling((yyvsp[-1]),(yyvsp[0]));
@@ -1984,7 +1984,7 @@ yyreduce:
     break;
 
   case 64:
-#line 295 "./syntax.y" /* yacc.c:1646  */
+#line 296 "./syntax.y" /* yacc.c:1646  */
     {  //22
         (yyval)=newast("Exp",22,(yyloc).first_line,""); 
         add_child((yyval),(yyvsp[-3])); add_sibling((yyvsp[-3]),(yyvsp[-2])); add_sibling((yyvsp[-2]),(yyvsp[-1])); add_sibling((yyvsp[-1]),(yyvsp[0]));
@@ -1993,7 +1993,7 @@ yyreduce:
     break;
 
   case 65:
-#line 299 "./syntax.y" /* yacc.c:1646  */
+#line 300 "./syntax.y" /* yacc.c:1646  */
     { //23
         (yyval)=newast("Exp",23,(yyloc).first_line,""); 
         add_child((yyval),(yyvsp[-2])); add_sibling((yyvsp[-2]),(yyvsp[-1])); add_sibling((yyvsp[-1]),(yyvsp[0]));
@@ -2002,7 +2002,7 @@ yyreduce:
     break;
 
   case 66:
-#line 305 "./syntax.y" /* yacc.c:1646  */
+#line 306 "./syntax.y" /* yacc.c:1646  */
     { //1
         (yyval)=newast("Args",1,(yyloc).first_line,""); 
         add_child((yyval),(yyvsp[-2])); add_sibling((yyvsp[-2]),(yyvsp[-1])); add_sibling((yyvsp[-1]),(yyvsp[0]));
@@ -2011,7 +2011,7 @@ yyreduce:
     break;
 
   case 67:
-#line 309 "./syntax.y" /* yacc.c:1646  */
+#line 310 "./syntax.y" /* yacc.c:1646  */
     { //2
         (yyval)=newast("Args",2,(yyloc).first_line,""); 
         add_child((yyval),(yyvsp[0]));
@@ -2255,7 +2255,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 314 "./syntax.y" /* yacc.c:1906  */
+#line 315 "./syntax.y" /* yacc.c:1906  */
 
 int main(int argc, char** argv)
 {
@@ -2267,7 +2267,7 @@ int main(int argc, char** argv)
         return 1;
     }
     no_syntax_error=1;
-    yylval=malloc(sizeof(struct ast));
+    yylval=malloc(sizeof(struct ast_));
     yyrestart(f);
     trieinit();
     //yydebug=1;

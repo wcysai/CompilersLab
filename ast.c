@@ -5,11 +5,9 @@
 #include "defi.h"
 #define TABWIDTH 4
 
-struct ast *
-
-newast(char *nodetype, int opnum, int lineno, char *nodename)
+ast newast(char *nodetype, int opnum, int lineno, char *nodename)
 {
-    struct ast *a=malloc(sizeof(struct ast));
+    ast a=malloc(sizeof(struct ast_));
     if(!a)
     {
         yyerror("no free space");
@@ -19,23 +17,23 @@ newast(char *nodetype, int opnum, int lineno, char *nodename)
     a->lineno=lineno; a->opnum=opnum;
     a->nodename=nodename;
     a->child=NULL; a->sibling=NULL;
-    a->intval=0; a->doubleval=0;
+    a->val.intval=0;
     return a;
 }
 
-void add_child(struct ast *node,struct ast *child)
+void add_child(ast node,ast child)
 {
     if(node==NULL) return;
     node->child=child;
 }
 
-void add_sibling(struct ast *node, struct ast *sibling)
+void add_sibling(ast node,ast sibling)
 {
     if(node==NULL) return;
     if(node->sibling==NULL) node->sibling=sibling;
 }
 
-void print_ast(struct ast *node,int tabs)
+void print_ast(ast node,int tabs)
 {
     if(node==NULL) return;  
     if(strcmp(node->nodetype,"Empty")) 
@@ -43,11 +41,11 @@ void print_ast(struct ast *node,int tabs)
         for(int i=0;i<tabs;i++) printf("  ");
         if(!strcmp(node->nodetype,"INT"))
         {
-            printf("INT: %d\n",node->intval);
+            printf("INT: %d\n",node->val.intval);
         }
         else if(!strcmp(node->nodetype,"FLOAT"))
         {
-            printf("FLOAT: %.10f\n",node->doubleval);
+            printf("FLOAT: %.10f\n",node->val.doubleval);
         }
         else if(!strcmp(node->nodetype,"ID"))
         {

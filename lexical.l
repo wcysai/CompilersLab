@@ -6,8 +6,8 @@
     yylloc.first_line=yylloc.last_line=yylineno;\
     yylloc.first_column=yycolumn;\
     yylloc.last_column=yycolumn+yyleng-1;\
-    yycolumn+=yyleng;
-    #define YYSTYPE struct ast*
+    yycolumn+=yyleng;    
+    #define YYSTYPE ast
     extern int no_syntax_error;
 %}
 %option noyywrap nodefault yylineno

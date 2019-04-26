@@ -5,11 +5,11 @@
     #include<assert.h>
     #include "defi.h"
     #include"lex.yy.c"
-    struct ast *root;
+    ast root;    
     int no_syntax_error;
 %}
 /* types */
-%define api.value.type {struct ast*}
+%define api.value.type {ast}
 /*%type <a> Exp 
 %type <a> Program ExtDefList ExtDef ExtDecList
 %type <a> Specifier StructSpecifier Tag OptTag VarDec FunDec
@@ -73,6 +73,7 @@ ExtDecList: VarDec { //1
         $$=newast("ExtDecList",1,@$.first_line,"");
         add_child($$,$1);  add_sibling($1,$2); add_sibling($2,$3); 
     }
+    ;
 Specifier: TYPE { //1
         $$=newast("Specifier",1,@$.first_line,"");
         add_child($$,$1); 
@@ -322,7 +323,7 @@ int main(int argc, char** argv)
         return 1;
     }
     no_syntax_error=1;
-    yylval=malloc(sizeof(struct ast));
+    yylval=malloc(sizeof(struct ast_));
     yyrestart(f);
     trieinit();
     //yydebug=1;

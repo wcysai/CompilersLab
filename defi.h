@@ -2,7 +2,8 @@
 #include<string.h>
 extern int yylineno;
 int yyerror(const char *msg);
-struct ast
+typedef struct ast_* ast;
+struct ast_
 {
     char *nodetype; //a string that represents what type the node is
     char *nodename; // the name of the node
@@ -13,8 +14,8 @@ struct ast
         int intval; //int value for the node
     }val;
     int lineno; //the line where the node presents
-    struct ast *child; //child of the current node(if exists)
-    struct ast *sibling; //sibling of the current node(if exists)
+    ast child; //child of the current node(if exists)
+    ast sibling; //sibling of the current node(if exists)
 };
 
 struct numval
@@ -23,7 +24,6 @@ struct numval
     double number;
 };
 
-enum {Variable,Function,Struct} SymbolType;
 
 typedef struct Type_* Type;
 typedef struct FieldList_* FieldList;
@@ -48,46 +48,44 @@ struct FieldList_
 bool SameType(Type p,Type q);
 bool SameField(FieldList p,FieldList q);
 
-struct symbol
+
+typedef struct Symbol_ * Symbol;
+typedef struct Symlist_* Symlist;
+typedef struct Trie_* Trie;
+struct Symbol_
 {
     char *name; //symbol name
-    int symboltype; //function, variable or structs
-    int valtype; //int or double or void
-    double doubleval; //double value for some symbol
-    int intval;      //int value for some symbol
+    enum {Function,Variable} SymbolType; //function or variable
+    Type type;
     int lineno; // the line where the symbol is defined
-    struct ast *treenode; //node in the abstract syntax tree 
-    struct symlist *args; //list of arguments of a function
-    struct symbol *temp; //temporary definition that overrides the current one
+    ast treenode; //node in the abstract syntax tree 
+    Symlist args; //list of arguments of a function
+    Symbol temp; //temporary definition that overrides the current one
 };
 
-struct symlist//arguments of a function
+struct Symlist_//arguments of a function
 {
-    struct symbol *sym; //symbol of the current argument
-    struct symlist *next; //next argument
+    Type type;
+    Symlist next; //next argument
 };
 
-struct trie
+struct Trie_
 {
-    struct trie* next[60];
-    struct symbol *sym;
+    Trie next[60];
+    Symbol sym;
 };
 
-//ast functions
-struct ast *newast(char *nodetype, int opnum, int lineno,char *nodename);
-void add_child(struct ast* node,struct ast *child);
-void add_sibling(struct ast* node,struct ast *sibling);
-void print_ast(struct ast* node,int tabs);
+//ast function 
+ast newast(char *nodetype, int opnum, int lineno,char *nodename);
+void add_child(ast node,ast child);
+void add_sibling(ast node,ast sibling);
+void print_ast(ast node,int tabs);
 
 //symbol&trie functions
-struct symbol *newsymbol(char *name, int symboltype, int valtype, int lineno,char *nodename);
 int find_id(char x);
-struct trie *newnode();
+Trie newnode();
 void trieinit();
-bool trieinsert(struct symbol* sym,int type);
-struct symbol *triefind(char *name);
-bool triedelete(struct symbol *sym,int type);
+bool trieinsert(Symbol sym);
+Symbol triefind(char *name);
+bool triedelete(Symbol sym,int type);
 
-double eval(struct ast*);
-
-void treefree(struct ast*);

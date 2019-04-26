@@ -1,5 +1,4 @@
 #include <stdio.h>
-
 #include <stdlib.h>
 #include <stdarg.h>
 #include <assert.h>
@@ -14,27 +13,28 @@ int find_id(char x)
 }
 
 
-struct trie *newnode()
+Trie newnode()
 {
-    struct trie* t=(struct trie*)malloc(sizeof(struct trie));
+    Trie t=(Trie)malloc(sizeof(struct Trie_));
     for(int i=0;i<60;i++) t->next[i]=NULL;
     t->sym=NULL;
     return t;
 }
 
-struct trie *func,*var,*str;
-//trie root node for functions,variables,and structs respectively
+Trie func,var;
+//trie root node for functions and variables respectively
 
 void trieinit()
 {
-    func=newnode(); var=newnode(); str=newnode();
+    func=newnode(); var=newnode(); 
 }
 
 //insert a new symbol into trie
 //type=0,1,2 : function,variable, struct
-bool trieinsert(struct symbol* sym,int type)
+bool trieinsert(Symbol sym)
 {
-    struct trie* s=(!type?func:(type==1?var:str));
+    int type=sym->SymbolType;
+    Trie s=(!type?func:var);
     char *x=sym->name;
     for(int i=0;x[i];i++)
     {
@@ -42,7 +42,7 @@ bool trieinsert(struct symbol* sym,int type)
         if(s->next[id]) {s=s->next[id];}
         else
         {
-            struct trie *t=newnode();
+            Trie t=newnode();
             s->next[id]=t;
             s=t;
         }
@@ -52,9 +52,9 @@ bool trieinsert(struct symbol* sym,int type)
     return f;
 }
 //check if some symbol exists in the trie
-struct symbol *lookup(char *name,int type)
+Symbol lookup(char *name,int type)
 {
-    struct trie* s=(!type?func:(type==1?var:str));
+    Trie s=(!type?func:var);
     char *x=name;
     for(int i=0;x[i];i++)
     {
@@ -65,9 +65,9 @@ struct symbol *lookup(char *name,int type)
     return s->sym;
 }
 //delete a symbol from trie
-bool triedelete(struct symbol* sym,int type)
+bool triedelete(Symbol sym,int type)
 {
-    struct trie* s=(!type?func:(type==1?var:str));
+    Trie s=(!type?func:var);
     char *x=sym->name;
     for(int i=0;x[i];i++)
     {
