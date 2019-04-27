@@ -24,9 +24,14 @@ struct numval
     double number;
 };
 
+char* extract_name(ast node);
+
 
 typedef struct Type_* Type;
 typedef struct FieldList_* FieldList;
+typedef struct Dec_* Dec;
+typedef struct DecList_* DecList;
+typedef struct ArrayDec_* ArrayDec;
 struct Type_
 {
     enum{BASIC,ARRAY,STRUCTURE} kind;
@@ -45,8 +50,31 @@ struct FieldList_
     FieldList tail; 
 };
 
+struct ArrayDec_
+{
+    int size;
+    ArrayDec tail;
+};
+
+struct Dec_
+{
+    char* name;
+    ArrayDec array;
+};
+
+struct DecList_
+{
+    Dec dec;
+    DecList tail;
+};
+
+
 bool SameType(Type p,Type q);
 bool SameField(FieldList p,FieldList q);
+Type construct_type(ast node);
+Type construct_basic(ast node);
+Type construct_struct(ast node);
+FieldList construct_type_list(ast node);
 
 
 typedef struct Symbol_ * Symbol;

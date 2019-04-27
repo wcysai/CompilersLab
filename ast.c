@@ -71,5 +71,10 @@ void print_ast(ast node,int tabs)
     if(node->sibling) print_ast(node->sibling,tabs);
 }
 
+char* extract_name(ast node)
+{
+    if(!strcmp(node->nodetype,"Empty")) return NULL;
+    return node->nodename;
+}
 
 
