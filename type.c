@@ -42,16 +42,17 @@ Type construct_struct(ast node)
         case 1: 
         {
             ty->u.structure->name=extract_name(node->child->sibling);
+            break;
         }
     }
 }
 
 Type construct_type(ast node)
 {
-    Type ty=malloc(sizeof(struct Type_));
     switch(node->opnum)
     {
-        case 1: return NULL;
+        case 1: {return construct_basic(p1(node)); break;}
+        case 2: {return construct_struct(p1(node)); break;}
     }
 }
 

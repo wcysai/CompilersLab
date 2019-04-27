@@ -7,13 +7,13 @@
 Dec construct_Dec(ast node)
 {
     Dec dc=malloc(sizeof(struct Dec_));
-    node=p1(node);
     switch(node->opnum)
     {
         case 1: 
         {
             dc->name=extract_name(p1(node));
             dc->array=NULL;
+            break;
         }
         case 2:
         {
@@ -22,6 +22,7 @@ Dec construct_Dec(ast node)
             ad->size=p3(node)->val.intval; 
             ad->tail=dc->array;
             dc->array=ad;
+            break;
         }
     }
     return dc;
@@ -30,11 +31,11 @@ Dec construct_Dec(ast node)
 DecList construct_DecList(ast node)
 {
     DecList dl=malloc(sizeof(struct DecList_));
-    dl->dec=construct_Dec(node->child);
+    dl->dec=construct_Dec(p1(p1(node)));
     switch(node->opnum)
     {
-        case 1: dl->tail=NULL;
-        case 2: dl->tail=construct_DecList(p3(node));
+        case 1: {dl->tail=NULL; break;}
+        case 2: {dl->tail=construct_DecList(p3(node)); break;}
     }
     return dl;
 }
@@ -54,7 +55,9 @@ Type arrtype(Type tp,ArrayDec arr)
 
 DefList construct_Def(ast node)
 {
+    if(!strcmp(node->nodename,"Empty")) return NULL;
     Type tp=construct_type(p1(node));
+    assert(tp!=NULL);
     DecList dl=construct_DecList(p2(node));
     DefList df=malloc(sizeof(struct DefList_));
     while(dl!=NULL)
@@ -69,16 +72,18 @@ DefList construct_Def(ast node)
 }
 
 DefList construct_DefList(ast node)
-{
+{ 
+    if(!strcmp(node->nodename,"Empty")) return NULL;
     switch(node->opnum)
     {
-        case 1:return NULL;
-        case 2:
+        case 2: {return NULL; break;}
+        case 1:
         {
             DefList df=construct_Def(p1(node));
             DefList app=construct_DefList(p2(node));
             df->tail=app;
             return df;
+            break;
         }
     }
 }
@@ -97,8 +102,11 @@ Symbol construct_symbol(ast node)
 void semantic_analysis(ast node)
 {
     if(node==NULL) return;
-    if(!strcmp(node->nodetype,"Def"))
+    semantic_analysis(p1(node));
+    semantic_analysis(node->sibling);
+    if(!strcmp(node->nodetype,"DefList"))
     {
-        
+        DefList dl=construct_DefList(node); 
+        printf("%s\n",dl->name);
     }
 }

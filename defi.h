@@ -132,3 +132,5 @@ bool trieinsert(Symbol sym);
 Symbol triefind(char *name);
 bool triedelete(Symbol sym,int type);
 
+void semantic_analysis(ast node);
+
