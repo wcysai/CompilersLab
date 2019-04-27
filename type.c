@@ -24,40 +24,6 @@ bool SameField(FieldList p,FieldList q)
     return SameType(p->type,q->type)&&SameField(p->tail,q->tail);
 }
 
-Dec construct_Dec(ast node)
-{
-    Dec dc=malloc(sizeof(struct Dec_));
-    node=node->child;
-    switch(node->opnum)
-    {
-        case 1: 
-        {
-            dc->name=extract_name(node->child);
-            dc->array=NULL;
-        }
-        case 2:
-        {
-            dc=construct_Dec(node->child);
-            ArrayDec ad=malloc(sizeof(struct ArrayDec_));
-            ad->size=node->child->sibling->sibling->val.intval; 
-            ad->tail=dc->array;
-            dc->array=ad;
-        }
-    }
-    return dc;
-}
-
-DecList construct_DecList(ast node)
-{
-    DecList dl=malloc(sizeof(struct DecList_));
-    dl->dec=construct_Dec(node->child);
-    switch(node->opnum)
-    {
-        case 1: dl->tail=NULL;
-        case 2: dl->tail=construct_DecList(node->child->sibling->sibling);
-    }
-    return dl;
-}
 
 Type construct_basic(ast node)
 {
@@ -89,17 +55,3 @@ Type construct_type(ast node)
     }
 }
 
-FieldList construct_type_list(ast node)
-{
-    FieldList fi=malloc(sizeof(struct FieldList_));
-    switch(node->opnum)
-    {
-        case 1:
-        {
-            fi->type=construct_type(node->child);
-            fi->tail=construct_type_list(node->child->sibling);
-        }
-        case 2:return NULL;
-    }
-
-}

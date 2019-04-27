@@ -1,5 +1,10 @@
 #include<stdbool.h>
 #include<string.h>
+#define p1(x) x->child
+#define p2(x) x->child->sibling
+#define p3(x) x->child->sibling->sibling
+#define p4(x) x->child->sibling->sibling->sibling
+#define p5(x) x->child->sibling->sibling->sibling->sibling
 extern int yylineno;
 int yyerror(const char *msg);
 typedef struct ast_* ast;
@@ -32,6 +37,9 @@ typedef struct FieldList_* FieldList;
 typedef struct Dec_* Dec;
 typedef struct DecList_* DecList;
 typedef struct ArrayDec_* ArrayDec;
+typedef struct Def_* Def;
+typedef struct DefList_* DefList;
+
 struct Type_
 {
     enum{BASIC,ARRAY,STRUCTURE} kind;
@@ -66,6 +74,13 @@ struct DecList_
 {
     Dec dec;
     DecList tail;
+};
+
+struct DefList_
+{
+    char* name;
+    Type type;
+    DefList tail;
 };
 
 
