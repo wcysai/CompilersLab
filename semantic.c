@@ -90,7 +90,9 @@ DefList construct_DefList(ast node)
         {
             DefList df=construct_Def(p1(node));
             DefList app=construct_DefList(p2(node));
-            df->tail=app;
+            DefList pt=df;
+            while(pt->tail!=NULL) pt=pt->tail; 
+            pt->tail=app;
             return df;
             break;
         }
@@ -362,7 +364,7 @@ void expression_semantic_analysis(ast node)
             {
                 char msg[100];
                 sprintf(msg,"Illegal use of \".\"");
-                semantic_error(11,node->lineno,msg);
+                semantic_error(13,node->lineno,msg);
                 return;
             }
             char* name=extract_name(p3(node));
@@ -426,6 +428,24 @@ void Define_Struct(ast node)
         char msg[100];
         sprintf(msg,"Redefinition of struct \"%s\"",name);
         semantic_error(3,node->lineno,msg);
+        return;
+    }
+    FieldList fl=tp->u.structure; 
+    while(fl!=NULL)
+    {
+        FieldList tmp=fl->tail;
+        while(tmp!=NULL)
+        {
+            if(!strcmp(fl->name,tmp->name))
+            {
+                char msg[100];
+                sprintf(msg,"Redefined field \"%s\"",fl->name);
+                semantic_error(15,node->lineno,msg);
+                return;
+            }
+            tmp=tmp->tail;
+        }
+        fl=fl->tail;
     }
 }
 
@@ -455,20 +475,41 @@ void Define_Function(ast node)
         char msg[100];
         sprintf(msg,"Redefinition of function \"%s\"",fd->name);
         semantic_error(4,node->lineno,msg);
+    } 
+    VarList arg=fd->args;
+    while(arg!=NULL) 
+    {
+        sym=construct_variable_symbol(arg->name,arg->type);
+        trieinsert(sym);
+        arg=arg->tail;
     }
 }
 
 void return_analysis(ast node)
 {
-    node
+    int lineno=node->lineno;
+    node=node->parent;
+    Type tp=construct_expression_type(p2(node));
+    while(node!=NULL&&strcmp(node->nodetype,"ExtDef")) node=node->parent;
+    if(node==NULL) return;
+    FunDec fd=construct_FunDec(node);
+    Type tp2=fd->type;
+    if(!SameType(tp,tp2))
+    {
+        char msg[100];
+        sprintf(msg,"Type mismatched for return.");
+        semantic_error(8,lineno,msg);
+    }
 }
 
 void semantic_analysis(ast node)
 {
     if(node==NULL) return;
-    if(!strcmp(node->nodetype,"Def")) Define_Variable(node); 
+    if(!strcmp(node->nodetype,"StructSpecifier")) return;
+    if(!strcmp(node->nodetype,"Def")) Define_Variable(node);
     else if(!strcmp(node->nodetype,"ExtDef")) ExtDef(node); 
     else if(!strcmp(node->nodetype,"Exp")) expression_semantic_analysis(node);
+    else if(!strcmp(node->nodetype,"RETURN")) return_analysis(node);
     semantic_analysis(p1(node));
     semantic_analysis(node->sibling);
 } 

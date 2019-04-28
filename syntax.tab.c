@@ -2272,7 +2272,7 @@ int main(int argc, char** argv)
     trieinit();
     //yydebug=1;
     yyparse();
-    if(no_syntax_error) print_ast(root,0);
-    semantic_analysis(root);
+    //if(no_syntax_error) print_ast(root,0);
+    if(no_syntax_error) semantic_analysis(root);
 }
 

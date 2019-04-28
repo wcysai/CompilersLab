@@ -16,7 +16,7 @@ ast newast(char *nodetype, int opnum, int lineno, char *nodename)
     a->nodetype=nodetype;
     a->lineno=lineno; a->opnum=opnum;
     a->nodename=nodename;
-    a->child=NULL; a->sibling=NULL;
+    a->child=NULL; a->sibling=NULL; a->parent=NULL;
     a->val.intval=0;
     return a;
 }
@@ -24,13 +24,17 @@ ast newast(char *nodetype, int opnum, int lineno, char *nodename)
 void add_child(ast node,ast child)
 {
     if(node==NULL) return;
-    node->child=child;
+    node->child=child; child->parent=node;
 }
 
 void add_sibling(ast node,ast sibling)
 {
     if(node==NULL) return;
-    if(node->sibling==NULL) node->sibling=sibling;
+    if(node->sibling==NULL) 
+    {
+        node->sibling=sibling;
+        sibling->parent=node->parent;
+    }
 }
 
 void print_ast(ast node,int tabs)

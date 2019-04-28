@@ -130,7 +130,7 @@ Type construct_struct(ast node)
             if(sym==NULL||sym->SymbolType!=Variable||sym->u.type->kind!=STRUCTURE) 
             {
                 char msg[100];
-                sprintf(msg,"Undefined struct %s",name);
+                sprintf(msg,"Undefined struct \"%s\"",name);
                 semantic_error(17,node->lineno,msg);
                 ty->u.structure=NULL;
                 return ty;

@@ -128,6 +128,7 @@ Type arrrtype(Type tp,ArrayDec arr);
 DefList construct_Def(ast node);
 DefList construct_DefList(ast node);
 VarList construct_VarList(ast node);
+VarList construct_Args(ast node);
 FunDec construct_FunDec(ast node);
 void Define_Variable(ast node);
 void Define_Struct(ast node);
@@ -146,16 +147,18 @@ bool IsArray(Type p);
 bool IsStruct(Type p);
 bool IsVariable(Symbol p);
 bool IsFunction(Symbol p);
+Type newint();
+Type newfloat();
 Type construct_type(ast node);
 Type construct_basic(ast node);
 Type construct_struct(ast node);
 Type search_struct(Type tp,char *name);
-FieldList construct_type_list(ast node);
 
 
 
 extern Trie func,var;
 
+int find_id(char x);
 void trieinit();
 bool trieinsert(Symbol sym);
 bool triedelete(Symbol sym);
@@ -178,5 +181,7 @@ void print_ast(ast node,int tabs);
 Symbol construct_variable_symbol(char *name,Type tp);
 Symbol construct_function_symbol(char *name,FunDec fd);
 Type construct_expression_type(ast node);
+void expression_semantic_analysis(ast node);
 void semantic_analysis(ast node);
+void return_analysis(ast node);
 
