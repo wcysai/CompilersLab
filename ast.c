@@ -74,6 +74,20 @@ void print_ast(ast node,int tabs)
 char* extract_name(ast node)
 {
     if(!strcmp(node->nodetype,"Empty")) return NULL;
+    if(!strcmp(node->nodetype,"ID")) return node->nodename;
+    else if(!strcmp(node->nodetype,"Tag")) return p1(node)->nodename;
+    else if(!strcmp(node->nodetype,"OptTag"))
+    {
+        switch(node->opnum)
+        {
+            case 1: 
+            {
+                return p1(node)->nodename;
+                break;
+            }
+            case 2: return NULL;
+        }
+    }
     return node->nodename;
 }
 

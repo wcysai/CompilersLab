@@ -4,7 +4,7 @@
 #include <assert.h>
 #include "defi.h"
 
-Dec construct_Dec(ast node)
+Dec construct_VarDec(ast node)
 {
     Dec dc=malloc(sizeof(struct Dec_));
     switch(node->opnum)
@@ -17,7 +17,7 @@ Dec construct_Dec(ast node)
         }
         case 2:
         {
-            dc=construct_Dec(p1(node));
+            dc=construct_VarDec(p1(node));
             ArrayDec ad=malloc(sizeof(struct ArrayDec_));
             ad->size=p3(node)->val.intval; 
             ad->tail=dc->array;
@@ -28,10 +28,15 @@ Dec construct_Dec(ast node)
     return dc;
 }
 
+Dec construct_Dec(ast node)
+{
+    return construct_VarDec(p1(node));
+}
+
 DecList construct_DecList(ast node)
 {
     DecList dl=malloc(sizeof(struct DecList_));
-    dl->dec=construct_Dec(p1(p1(node)));
+    dl->dec=construct_Dec(p1(node));
     switch(node->opnum)
     {
         case 1: {dl->tail=NULL; break;}
@@ -88,15 +93,73 @@ DefList construct_DefList(ast node)
     }
 }
 
+VarList construct_VarList(ast node)
+{
+    VarList vl=malloc(sizeof(struct VarList_));
+    Type tp=construct_type(p1(p1(node)));
+    Dec dec=construct_VarDec(p2(p1(node)));
+    tp=arrtype(tp,dec->array);
+    vl->name=dec->name;
+    vl->type=tp;
+    switch(node->opnum)
+    {
+        case 1:
+        {
+            vl->tail=NULL;
+            break;
+        }
+        case 2:
+        {
+            vl->tail=construct_VarList(p3(node));
+            break;
+        }
+    }
+    return vl;
+}
 
-Symbol construct_symbol(ast node)
+FunDec construct_FunDec(ast node)
+{
+    Type tp=construct_type(p1(node));
+    FunDec fd=malloc(sizeof(struct FunDec_));
+    fd->type=tp;
+    fd->name=extract_name(p1(p1(node)));
+    switch(p2(node)->opnum)
+    {
+        case 2:
+        {
+            fd->args=NULL;
+            break;
+        }
+        case 1:
+        {
+            fd->args=construct_VarList(p3(p1(node)));
+            break;
+        }
+    }
+    return fd;
+}
+
+
+Symbol construct_variable_symbol(char* name,Type tp)
 {
     Symbol sy=malloc(sizeof(struct Symbol_));
-    if(!strcmp(node->nodetype,"Def"))
-    {
-        sy->lineno=node->lineno;
-    }
+    sy->name=name;
+    sy->SymbolType=1;
+    sy->u.type=tp;
     return sy;
+}
+
+void Definition_analysis(ast node)
+{
+    if(!strcmp(node->nodetype,"DefList"))
+    {
+        DefList dl=construct_DefList(node);
+        while(dl!=NULL)
+        {
+            Symbol sym=construct_symbol(dl->name,dl->type);
+            if()
+        }
+    }
 }
 
 void semantic_analysis(ast node)
@@ -104,9 +167,5 @@ void semantic_analysis(ast node)
     if(node==NULL) return;
     semantic_analysis(p1(node));
     semantic_analysis(node->sibling);
-    if(!strcmp(node->nodetype,"DefList"))
-    {
-        DefList dl=construct_DefList(node); 
-        printf("%s\n",dl->name);
-    }
+    if(!strcmp(node->nodetype,"DefList")||!strcmp(node->nodetype,"ExtDefList")) Definition_analysis(node);
 }

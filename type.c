@@ -27,7 +27,7 @@ bool SameField(FieldList p,FieldList q)
 
 Type construct_basic(ast node)
 {
-    Type ty=malloc(sizeof(struct Type_));
+    Type ty=malloc(sizeof(struct Type_)); 
     ty->kind=BASIC;
     if(!strcmp(node->nodename,"int")) ty->u.basic=0;
     else ty->u.basic=1;
@@ -41,10 +41,29 @@ Type construct_struct(ast node)
     {
         case 1: 
         {
-            ty->u.structure->name=extract_name(node->child->sibling);
+            char *name=extract_name(p2(node));
+            Symbol sym=lookup(name,1);
+            if(sym==NULL||sym->SymbolType!=Variable||sym->u.type->kind!=STRUCTURE) {printf("Error type 17 at line %d: Undefined struct %s\n",node->lineno,name);}
+            ty=sym->u.type;
             break;
         }
+        case 2:
+        {
+            DefList df=construct_DefList(p4(node));
+            FieldList fl=malloc(sizeof(struct FieldList_));
+            while(df!=NULL)
+            {
+                FieldList nfl=malloc(sizeof(struct FieldList_));
+                nfl->name=df->name;
+                nfl->type=df->type;
+                nfl->tail=fl;
+                df=df->tail;
+                fl=nfl;
+            }
+            ty->u.structure=fl;
+        }
     }
+    return ty;
 }
 
 Type construct_type(ast node)

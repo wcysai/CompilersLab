@@ -1,4 +1,4 @@
-#include<stdbool.h>
+v#include<stdbool.h>
 #include<string.h>
 #define p1(x) x->child
 #define p2(x) x->child->sibling
@@ -39,6 +39,8 @@ typedef struct DecList_* DecList;
 typedef struct ArrayDec_* ArrayDec;
 typedef struct Def_* Def;
 typedef struct DefList_* DefList;
+typedef struct FunDec_* FunDec;
+typedef struct VarList_* VarList;
 
 struct Type_
 {
@@ -83,6 +85,29 @@ struct DefList_
     DefList tail;
 };
 
+struct VarList_
+{
+    char* name;
+    Type type;
+    VarList tail;
+};
+
+struct FunDec_
+{
+    char* name;
+    Type type;
+    VarList args;
+};
+
+Dec construct_VarDec(ast node);
+Dec construct_Dec(ast node);
+DecList construct_DecList(ast node);
+Type arrrtype(Type tp,ArrayDec arr);
+DefList construct_Def(ast node);
+DefList construct_DefList(ast node);
+VarList construct_VarList(ast node);
+FunDec construct_FunDec(ast node);
+
 
 bool SameType(Type p,Type q);
 bool SameField(FieldList p,FieldList q);
@@ -99,18 +124,18 @@ struct Symbol_
 {
     char *name; //symbol name
     enum {Function,Variable} SymbolType; //function or variable
-    Type type;
-    int lineno; // the line where the symbol is defined
-    ast treenode; //node in the abstract syntax tree 
-    Symlist args; //list of arguments of a function
-    Symbol temp; //temporary definition that overrides the current one
+    //int lineno; // the line where the symbol is defined
+    union 
+    {
+        Type type;
+        FunDec func;
+    }u;
 };
 
-struct Symlist_//arguments of a function
-{
-    Type type;
-    Symlist next; //next argument
-};
+extern Trie func,var;
+
+bool trieinsert(Symbol sym);
+Symbol lookup(char *name,int type);
 
 struct Trie_
 {
