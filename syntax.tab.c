@@ -1526,7 +1526,7 @@ yyreduce:
   case 9:
 #line 72 "./syntax.y" /* yacc.c:1646  */
     { //2
-        (yyval)=newast("ExtDecList",1,(yyloc).first_line,"");
+        (yyval)=newast("ExtDecList",2,(yyloc).first_line,"");
         add_child((yyval),(yyvsp[-2]));  add_sibling((yyvsp[-2]),(yyvsp[-1])); add_sibling((yyvsp[-1]),(yyvsp[0])); 
     }
 #line 1533 "./syntax.tab.c" /* yacc.c:1646  */
@@ -1806,7 +1806,7 @@ yyreduce:
   case 44:
 #line 216 "./syntax.y" /* yacc.c:1646  */
     { //2
-        (yyval)=newast("Exp",1,(yyloc).first_line,"");
+        (yyval)=newast("Exp",2,(yyloc).first_line,"");
         add_child((yyval),(yyvsp[0]));
     }
 #line 1813 "./syntax.tab.c" /* yacc.c:1646  */
@@ -1815,7 +1815,7 @@ yyreduce:
   case 45:
 #line 220 "./syntax.y" /* yacc.c:1646  */
     { //3
-        (yyval)=newast("Exp",1,(yyloc).first_line,"");
+        (yyval)=newast("Exp",3,(yyloc).first_line,"");
         add_child((yyval),(yyvsp[0]));
     }
 #line 1822 "./syntax.tab.c" /* yacc.c:1646  */

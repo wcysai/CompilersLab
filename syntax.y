@@ -70,7 +70,7 @@ ExtDecList: VarDec { //1
         add_child($$,$1); 
     }
     | VarDec COMMA ExtDecList { //2
-        $$=newast("ExtDecList",1,@$.first_line,"");
+        $$=newast("ExtDecList",2,@$.first_line,"");
         add_child($$,$1);  add_sibling($1,$2); add_sibling($2,$3); 
     }
     ;
@@ -214,11 +214,11 @@ Exp: ID { //1
         add_child($$,$1);
     }
     | INT  { //2
-        $$=newast("Exp",1,@$.first_line,"");
+        $$=newast("Exp",2,@$.first_line,"");
         add_child($$,$1);
     }
     | FLOAT { //3
-        $$=newast("Exp",1,@$.first_line,"");
+        $$=newast("Exp",3,@$.first_line,"");
         add_child($$,$1);
     } 
     | Exp ASSIGNOP Exp { //4

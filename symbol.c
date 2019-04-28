@@ -1,4 +1,4 @@
-sym#include <stdio.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
 #include <assert.h>
@@ -52,9 +52,21 @@ bool trieinsert(Symbol sym)
     return f;
 }
 //check if some symbol exists in the trie
-Symbol lookup(char *name,int type)
+Symbol Function_Lookup(char *name)
 {
-    Trie s=(!type?func:var);
+    Trie s=func;
+    char *x=name;
+    for(int i=0;x[i];i++)
+    {
+        int id=find_id(x[i]);
+        if(s->next[id]) {s=s->next[id];}
+        else return NULL;
+    }
+    return s->sym;
+}
+Symbol Variable_Lookup(char *name)
+{
+    Trie s=var;
     char *x=name;
     for(int i=0;x[i];i++)
     {
@@ -65,8 +77,9 @@ Symbol lookup(char *name,int type)
     return s->sym;
 }
 //delete a symbol from trie
-bool triedelete(Symbol sym,int type)
+bool triedelete(Symbol sym)
 {
+    int type=sym->SymbolType;
     Trie s=(!type?func:var);
     char *x=sym->name;
     for(int i=0;x[i];i++)

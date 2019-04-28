@@ -1,5 +1,5 @@
-v#include<stdbool.h>
 #include<string.h>
+#include<stdbool.h>
 #define p1(x) x->child
 #define p2(x) x->child->sibling
 #define p3(x) x->child->sibling->sibling
@@ -21,6 +21,7 @@ struct ast_
     int lineno; //the line where the node presents
     ast child; //child of the current node(if exists)
     ast sibling; //sibling of the current node(if exists)
+    ast parent; //parent of the current node(if exists)
 };
 
 struct numval
@@ -30,6 +31,8 @@ struct numval
 };
 
 char* extract_name(ast node);
+
+void semantic_error(int type,int lineno,const char* msg);
 
 
 typedef struct Type_* Type;
@@ -52,6 +55,9 @@ struct Type_
         FieldList structure;
     }u;
 };
+
+Type newint();
+Type newfloat();
 
 struct FieldList_
 {
@@ -99,24 +105,6 @@ struct FunDec_
     VarList args;
 };
 
-Dec construct_VarDec(ast node);
-Dec construct_Dec(ast node);
-DecList construct_DecList(ast node);
-Type arrrtype(Type tp,ArrayDec arr);
-DefList construct_Def(ast node);
-DefList construct_DefList(ast node);
-VarList construct_VarList(ast node);
-FunDec construct_FunDec(ast node);
-
-
-bool SameType(Type p,Type q);
-bool SameField(FieldList p,FieldList q);
-Type construct_type(ast node);
-Type construct_basic(ast node);
-Type construct_struct(ast node);
-FieldList construct_type_list(ast node);
-
-
 typedef struct Symbol_ * Symbol;
 typedef struct Symlist_* Symlist;
 typedef struct Trie_* Trie;
@@ -132,11 +120,47 @@ struct Symbol_
     }u;
 };
 
+
+Dec construct_VarDec(ast node);
+Dec construct_Dec(ast node);
+DecList construct_DecList(ast node);
+Type arrrtype(Type tp,ArrayDec arr);
+DefList construct_Def(ast node);
+DefList construct_DefList(ast node);
+VarList construct_VarList(ast node);
+FunDec construct_FunDec(ast node);
+void Define_Variable(ast node);
+void Define_Struct(ast node);
+void Define_Function(ast node);
+void ExtDef(ast node);
+
+
+bool SameType(Type p,Type q);
+bool SameField(FieldList p,FieldList q);
+bool SameFunction(FunDec p,FunDec q);
+bool SameVarList(VarList p,VarList q);
+bool SameSymbol(Symbol p,Symbol q);
+bool IsInt(Type p);
+bool IsFloat(Type p);
+bool IsArray(Type p);
+bool IsStruct(Type p);
+bool IsVariable(Symbol p);
+bool IsFunction(Symbol p);
+Type construct_type(ast node);
+Type construct_basic(ast node);
+Type construct_struct(ast node);
+Type search_struct(Type tp,char *name);
+FieldList construct_type_list(ast node);
+
+
+
 extern Trie func,var;
 
+void trieinit();
 bool trieinsert(Symbol sym);
-Symbol lookup(char *name,int type);
-
+bool triedelete(Symbol sym);
+Symbol Variable_Lookup(char *name);
+Symbol Function_Lookup(char *name);
 struct Trie_
 {
     Trie next[60];
@@ -150,12 +174,9 @@ void add_sibling(ast node,ast sibling);
 void print_ast(ast node,int tabs);
 
 //symbol&trie functions
-int find_id(char x);
-Trie newnode();
-void trieinit();
-bool trieinsert(Symbol sym);
-Symbol triefind(char *name);
-bool triedelete(Symbol sym,int type);
 
+Symbol construct_variable_symbol(char *name,Type tp);
+Symbol construct_function_symbol(char *name,FunDec fd);
+Type construct_expression_type(ast node);
 void semantic_analysis(ast node);
 
