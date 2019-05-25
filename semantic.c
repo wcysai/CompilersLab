@@ -322,12 +322,15 @@ void expression_semantic_analysis(ast node)
                 semantic_error(9,node->lineno,msg);
                 return;
             }
+            break;
         }
         case 21:
         {
             Type tp=construct_expression_type(node);
             if(tp==NULL) return;
-            VarList args=construct_VarList(p3(node));
+            char* name=extract_name(p1(node));
+            Symbol sym=Function_Lookup(name);
+            VarList args=sym->u.func->args;
             if(args!=NULL)
             {
                 char msg[100];
@@ -335,6 +338,7 @@ void expression_semantic_analysis(ast node)
                 semantic_error(9,node->lineno,msg);
                 return;
             }
+            break;
         }
         case 22:
         {

@@ -185,3 +185,5 @@ void expression_semantic_analysis(ast node);
 void semantic_analysis(ast node);
 void return_analysis(ast node);
 
+//IR functions
+void funcinit();
