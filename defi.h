@@ -201,8 +201,13 @@ struct InterCode_
     enum{LABEL,FUNC,ASSIGN,ADD,SUB,MUL,DIVI,ADDR,RVAL,LVAL,GOTO,IFGOTO,RET,DEC,ARG,CALL,PARAM,READ,WRITE} kind;
     union
     {
-       int a;
-       int b;
+       struct{ICVariable op1,op2,op3; } ternary;
+       struct{ICVariable op1,op2; } binary;
+       struct{ICVariable op1; } unary;
+       struct{ICVariable op1; int sz;} dec;
+       struct{char* funcname;} fundec;
+       struct{ICVariable op1; char* funcname;} funcall;
+       struct{ICVariable op1,op2,op3; enum{EQ_,LE_,GE_,LEQ_,GEQ_,NEQ_} relop;} ig;
     }u;
     int codesize;
 };
