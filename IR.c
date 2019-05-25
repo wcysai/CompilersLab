@@ -79,6 +79,7 @@ void print_intermediate_code(InterCode ic)
     {
         case LABEL:
         {
+            if(ic->u.unary.op1==NULL) return;
             printf("LABEL ");
             print_ICVariable(ic->u.unary.op1);
             printf(" :\n");
@@ -91,6 +92,7 @@ void print_intermediate_code(InterCode ic)
         }
         case ASSIGN:
         {
+            if(ic->u.binary.op1==NULL||ic->u.binary.op2==NULL) return;
             print_ICVariable(ic->u.binary.op1);
             printf(" := ");
             print_ICVariable(ic->u.binary.op2);
@@ -99,6 +101,7 @@ void print_intermediate_code(InterCode ic)
         }
         case ADD:
         {
+            if(ic->u.ternary.op1==NULL||ic->u.ternary.op2==NULL||ic->u.ternary.op3==NULL) return;
             print_ICVariable(ic->u.ternary.op1);
             printf(" := ");
             print_ICVariable(ic->u.ternary.op2);
@@ -109,6 +112,7 @@ void print_intermediate_code(InterCode ic)
         }
         case SUB:
         {
+            if(ic->u.ternary.op1==NULL||ic->u.ternary.op2==NULL||ic->u.ternary.op3==NULL) return;
             print_ICVariable(ic->u.ternary.op1);
             printf(" := ");
             print_ICVariable(ic->u.ternary.op2);
@@ -119,6 +123,7 @@ void print_intermediate_code(InterCode ic)
         }
         case MUL:
         {
+            if(ic->u.ternary.op1==NULL||ic->u.ternary.op2==NULL||ic->u.ternary.op3==NULL) return;
             print_ICVariable(ic->u.ternary.op1);
             printf(" := ");
             print_ICVariable(ic->u.ternary.op2);
@@ -129,6 +134,7 @@ void print_intermediate_code(InterCode ic)
         }
         case DIVI:
         {
+            if(ic->u.ternary.op1==NULL||ic->u.ternary.op2==NULL||ic->u.ternary.op3==NULL) return;
             print_ICVariable(ic->u.ternary.op1);
             printf(" := ");
             print_ICVariable(ic->u.ternary.op2);
@@ -139,6 +145,7 @@ void print_intermediate_code(InterCode ic)
         }
         case ADDR:
         {
+            if(ic->u.binary.op1==NULL||ic->u.binary.op2==NULL) return;
             print_ICVariable(ic->u.binary.op1);
             printf(" := &");
             print_ICVariable(ic->u.binary.op2);
@@ -147,6 +154,7 @@ void print_intermediate_code(InterCode ic)
         }
         case RVAL:
         {
+            if(ic->u.binary.op1==NULL||ic->u.binary.op2==NULL) return;
             print_ICVariable(ic->u.binary.op1);
             printf(" := *");
             print_ICVariable(ic->u.binary.op2);
@@ -155,6 +163,7 @@ void print_intermediate_code(InterCode ic)
         }
         case LVAL:
         {
+            if(ic->u.binary.op1==NULL||ic->u.binary.op2==NULL) return;
             printf("*");
             print_ICVariable(ic->u.binary.op1);
             printf(" := ");
@@ -164,6 +173,7 @@ void print_intermediate_code(InterCode ic)
         }
         case GOTO:
         {
+            if(ic->u.unary.op1==NULL) return;
             printf("GOTO ");
             print_ICVariable(ic->u.unary.op1);
             printf("\n");
@@ -171,6 +181,7 @@ void print_intermediate_code(InterCode ic)
         }
         case IFGOTO:
         {
+            if(ic->u.ig.op1==NULL||ic->u.ig.op2==NULL||ic->u.ig.op3==NULL) return;
             printf("IF ");
             print_ICVariable(ic->u.ig.op1);
             switch(ic->u.ig.relop)
@@ -190,6 +201,7 @@ void print_intermediate_code(InterCode ic)
         }
         case RET:
         {
+            if(ic->u.unary.op1==NULL) return;
             printf("RETURN ");
             print_ICVariable(ic->u.unary.op1);
             printf("\n");
@@ -197,6 +209,7 @@ void print_intermediate_code(InterCode ic)
         }
         case DEC:
         {
+            if(ic->u.dec.op1==NULL) return;
             printf("DEC ");
             print_ICVariable(ic->u.dec.op1);
             printf(" [%d] ",ic->u.dec.sz);
@@ -205,6 +218,7 @@ void print_intermediate_code(InterCode ic)
         }
         case ARG:
         {
+            if(ic->u.unary.op1==NULL) return;
             printf("ARG ");
             print_ICVariable(ic->u.unary.op1);
             printf("\n");
@@ -212,12 +226,14 @@ void print_intermediate_code(InterCode ic)
         }
         case CALL:
         {
+            if(ic->u.funcall.op1==NULL) return;
             print_ICVariable(ic->u.funcall.op1);
             printf(" := CALL %s\n",ic->u.funcall.funcname);
             break;
         }
         case PARAM:
         {
+            if(ic->u.unary.op1==NULL) return;
             printf("PARAM ");
             print_ICVariable(ic->u.unary.op1);
             printf("\n");
@@ -225,6 +241,7 @@ void print_intermediate_code(InterCode ic)
         }
         case READ:
         {
+            if(ic->u.unary.op1==NULL) return;
             printf("READ ");
             print_ICVariable(ic->u.unary.op1);
             printf("\n");
@@ -232,6 +249,7 @@ void print_intermediate_code(InterCode ic)
         }
         case WRITE:
         {
+            if(ic->u.unary.op1==NULL) return;
             printf("WRITE ");
             print_ICVariable(ic->u.unary.op1);
             printf("\n");
@@ -255,6 +273,28 @@ InterCode bind_code(InterCode code1,InterCode code2)
     ptr->next=code2;
     code2->prev=ptr;
     return code1;
+}
+InterCode bind_code3(InterCode code1,InterCode code2,InterCode code3)
+{
+    return bind_code(code1,bind_code(code2,code3));
+}
+InterCode bind_code4(InterCode code1,InterCode code2,InterCode code3,InterCode code4)
+{
+    return bind_code(code1,bind_code(code2,bind_code(code3,code4)));
+}
+InterCode newLABEL(ICVariable v)
+{
+    InterCode code=newcode();
+    code->kind=LABEL;
+    code->u.unary.op1=v;
+    return code;
+}
+InterCode newGOTO(ICVariable v)
+{
+    InterCode code=newcode();
+    code->kind=GOTO;
+    code->u.unary.op1=v;
+    return code;
 }
 InterCode translate_Exp(ast node,ICVariable v)
 {
@@ -290,8 +330,18 @@ InterCode translate_Exp(ast node,ICVariable v)
         case 10:
         case 11:
         case 12:
+        case 19:
         {
-
+            ICVariable label1=newlabel(),label2=newlabel();
+            InterCode code0=newcode(),code2=newLABEL(label1),code3=newcode();
+            code0->kind=ASSIGN;
+            code0->u.binary.op1=v; code0->u.binary.op2=direct_number(0);
+            code3->kind=ASSIGN;
+            code3->u.binary.op1=v; code0->u.binary.op2=direct_number(1);
+            code2=bind_code(code2,code3);
+            code3=newLABEL(label2); 
+            InterCode code1=translate_Cond(node,label1,label2);
+            return bind_code4(code0,code1,code2,code3);
         }
         case 13:
         {
@@ -302,7 +352,7 @@ InterCode translate_Exp(ast node,ICVariable v)
             code3->u.ternary.op1=v;
             code3->u.ternary.op2=t1;
             code3->u.ternary.op3=t2;
-            return bind_code(code1,bind_code(code2,code3));
+            return bind_code3(code1,code2,code3);
         }
         case 14:
         {
@@ -313,7 +363,7 @@ InterCode translate_Exp(ast node,ICVariable v)
             code3->u.ternary.op1=v;
             code3->u.ternary.op2=t1;
             code3->u.ternary.op3=t2;
-            return bind_code(code1,bind_code(code2,code3));
+            return bind_code3(code1,code2,code3);
         }
         case 15:
         {
@@ -324,7 +374,7 @@ InterCode translate_Exp(ast node,ICVariable v)
             code3->u.ternary.op1=v;
             code3->u.ternary.op2=t1;
             code3->u.ternary.op3=t2;
-            return bind_code(code1,bind_code(code2,code3));
+            return bind_code3(code1,code2,code3);
         }
         case 16:
         {
@@ -335,7 +385,7 @@ InterCode translate_Exp(ast node,ICVariable v)
             code3->u.ternary.op1=v;
             code3->u.ternary.op2=t1;
             code3->u.ternary.op3=t2;
-            return bind_code(code1,bind_code(code2,code3));
+            return bind_code3(code1,code2,code3);
         }
         case 17:
         {
@@ -364,20 +414,16 @@ InterCode translate_Cond(ast node,ICVariable label_true,ICVariable label_false)
             ICVariable label1=newlabel();
             InterCode code1=translate_Cond(p1(node),label1,label_false);
             InterCode code2=translate_Cond(p3(node),label_true,label_false);
-            InterCode code3=newcode();
-            code3->kind=LABEL;
-            code3->u.unary.op1=label1;
-            return bind_code(code1,bind_code(code3,code2));
+            InterCode code3=newLABEL(label1);
+            return bind_code3(code1,code3,code2);
         }
         case 6:
         {
             ICVariable label1=newlabel();
             InterCode code1=translate_Cond(p1(node),label_true,label1);
             InterCode code2=translate_Cond(p3(node),label_true,label_false);
-            InterCode code3=newcode();
-            code3->kind=LABEL;
-            code3->u.unary.op1=label1;
-            return bind_code(code1,bind_code(code3,code2));
+            InterCode code3=newLABEL(label1);
+            return bind_code3(code1,code3,code2);
         }
         case 7:
         case 8:
@@ -392,15 +438,65 @@ InterCode translate_Cond(ast node,ICVariable label_true,ICVariable label_false)
             code3->kind=IFGOTO;
             code3->u.ig.op1=t1; code3->u.ig.op2=t2; code3->u.ig.op3=label_true;
             code3->u.ig.relop=node->opnum-RELOPMAGIC;
-            InterCode code4=newcode();
-            code4->kind=GOTO;
-            code4->u.unary.op1=label_false;
-            return bind_code(bind_code(code1,code2),bind_code(code3,code4));    
+            InterCode code4=newGOTO(label_false);
+            return bind_code4(code1,code2,code3,code4);    
         }
         case 19:
         {
             return translate_Cond(p2(node),label_false,label_true);
         }
         default: break;
+    }
+}
+InterCode translate_Stmt(ast node)
+{
+    switch(node->opnum)
+    {
+        case 1:
+        {
+            return translate_Exp(p1(node),NULL);
+        }
+        case 2:
+        {
+
+        }
+        case 3:
+        {
+            ICVariable t1=newtemp();
+            InterCode code1=translate_Exp(p2(node),t1);
+            InterCode code2=newcode();
+            code2->kind=RET;
+            code2->u.unary.op1=t1;
+            return bind_code(code1,code2);
+        }
+        case 4:
+        {
+            ICVariable label1=newlabel(),label2=newlabel();
+            InterCode code1=translate_Cond(p3(node),label1,label2);
+            InterCode code3=translate_Stmt(p5(node));
+            InterCode code2=newLABEL(label1);
+            InterCode code4=newLABEL(label2);
+            return bind_code4(code1,code2,code3,code4);   
+        }
+        case 5:
+        {
+            ICVariable label1=newlabel(),label2=newlabel(),label3=newlabel();
+            InterCode code1=translate_Cond(p3(node),label1,label2);
+            InterCode code3=translate_Stmt(p5(node));
+            InterCode code6=translate_Stmt(p7(node));
+            InterCode code2=newLABEL(label1),code4=newGOTO(label3),code5=newLABEL(label2),code7=newLABEL(label3);
+            code1=bind_code4(code1,code2,code3,code4);
+            return bind_code4(code1,code5,code6,code7);
+        }
+        case 6:
+        {
+            ICVariable label1=newlabel(),label2=newlabel(),label3=newlabel();
+            InterCode code2=translate_Cond(p3(node),label2,label3);
+            InterCode code4=translate_Stmt(p5(node));
+            InterCode code1=newLABEL(label1),code3=newLABEL(label2),code5=newGOTO(label1),code6=newLABEL(label3);
+            code1=bind_code4(code1,code2,code3,code4);
+            return bind_code3(code1,code5,code6);
+        }
+        default: return NULL;
     }
 }

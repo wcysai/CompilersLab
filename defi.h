@@ -5,6 +5,8 @@
 #define p3(x) x->child->sibling->sibling
 #define p4(x) x->child->sibling->sibling->sibling
 #define p5(x) x->child->sibling->sibling->sibling->sibling
+#define p6(x) x->child->sibling->sibling->sibling->sibling->sibling
+#define p7(x) x->child->sibling->sibling->sibling->sibling->sibling->sibling
 #define RELOPMAGIC 7
 extern int yylineno;
 int yyerror(const char *msg);
@@ -219,3 +221,6 @@ ICVariable direct_number(int d);
 ICVariable find_icv(char *name);
 void print_ICVariable(ICVariable v);
 void print_intermediate_code(InterCode ic);
+InterCode bind_code(InterCode code1,InterCode code2);
+InterCode translate_Exp(ast node,ICVariable v);
+InterCode translate_Cond(ast node,ICVariable label_true,ICVariable label_false);
