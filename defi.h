@@ -157,6 +157,7 @@ Type search_struct(Type tp,char *name);
 
 
 extern Trie func,var;
+extern int variablecnt,tempcnt,labelcnt;
 
 int find_id(char x);
 void trieinit();
@@ -187,3 +188,22 @@ void return_analysis(ast node);
 
 //IR functions
 void funcinit();
+typedef struct InterCode_ * InterCode;
+typedef struct ICVariable_* ICVariable;
+struct ICVariable_
+{
+	enum{VAR,TEMP,LAB} kind;
+	int cnt;
+};
+struct InterCode_
+{
+    InterCode prev,next;
+    enum{LABEL,FUNC,ASSIGN,ADD,SUB,MUL,DIVI,ADDR,RVAL,LVAL,GOTO,IFGOTO,RET,DEC,ARG,CALL,PARAM,READ,WRITE} kind;
+    union
+    {
+       int a;
+       int b;
+    }u;
+    int codesize;
+};
+

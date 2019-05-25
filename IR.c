@@ -24,3 +24,121 @@ void funcinit()
     symwrite->u.func->args->tail=NULL;
     assert(trieinsert(symwrite));
 }
+int labelcnt=0,variablecnt=0,tempcnt=0;
+ICVariable newvariable()
+{
+    variablecnt++;
+    ICVariable v=malloc(sizeof(struct ICVariable_));
+    v->kind=VAR;
+    v->cnt=variablecnt;
+    return v;
+}
+ICVariable newtemp()
+{
+    labelcnt++;
+    ICVariable v=malloc(sizeof(struct ICVariable_));
+    v->kind=LAB;
+    v->cnt=variablecnt;
+    return v;
+}
+ICVariable newlabel()
+{
+    labelcnt++;
+    ICVariable v=malloc(sizeof(struct ICVariable_));
+    v->kind=LAB;
+    v->cnt=labelcnt;
+    return v;
+}
+void PrintICVariable(ICVariable v)
+{
+    switch(v->kind)
+    {
+        case VAR: {printf("v"); break;}
+        case TEMP: {printf("t"); break;}
+        case LAB: {printf("label"); break;}
+    }
+    printf("%d",v->cnt);
+}
+void print_intermediate_code(InterCode ic)
+{
+    switch(ic->kind)
+    {
+        case LABEL:
+        {
+            break;
+        }
+        case FUNC:
+        {
+            break;
+        }
+        case ASSIGN:
+        {
+            break;
+        }
+        case ADD:
+        {
+            break;
+        }
+        case SUB:
+        {
+            break;
+        }
+        case MUL:
+        {
+            break;
+        }
+        case DIVI:
+        {
+            break;
+        }
+        case ADDR:
+        {
+            break;
+        }
+        case RVAL:
+        {
+            break;
+        }
+        case LVAL:
+        {
+            break;
+        }
+        case GOTO:
+        {
+            break;
+        }
+        case IFGOTO:
+        {
+            break;
+        }
+        case RET:
+        {
+            break;
+        }
+        case DEC:
+        {
+            break;
+        }
+        case ARG:
+        {
+            break;
+        }
+        case CALL:
+        {
+            break;
+        }
+        case PARAM:
+        {
+            break;
+        }
+        case READ:
+        {
+            break;
+        }
+        case WRITE:
+        {
+            break;
+        }
+        default: break;
+    }
+}
