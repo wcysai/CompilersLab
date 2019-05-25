@@ -5,6 +5,7 @@
 #define p3(x) x->child->sibling->sibling
 #define p4(x) x->child->sibling->sibling->sibling
 #define p5(x) x->child->sibling->sibling->sibling->sibling
+#define RELOPMAGIC 7
 extern int yylineno;
 int yyerror(const char *msg);
 typedef struct ast_* ast;
@@ -108,6 +109,12 @@ struct FunDec_
 typedef struct Symbol_ * Symbol;
 typedef struct Symlist_* Symlist;
 typedef struct Trie_* Trie;
+typedef struct ICVariable_* ICVariable;
+struct ICVariable_
+{
+	enum{VAR,TEMP,LAB,DNUM} kind;
+	int cnt;
+};
 struct Symbol_
 {
     char *name; //symbol name
@@ -169,6 +176,7 @@ struct Trie_
 {
     Trie next[60];
     Symbol sym;
+    ICVariable icv;
 };
 
 //ast function 
@@ -189,12 +197,6 @@ void return_analysis(ast node);
 //IR functions
 void funcinit();
 typedef struct InterCode_ * InterCode;
-typedef struct ICVariable_* ICVariable;
-struct ICVariable_
-{
-	enum{VAR,TEMP,LAB} kind;
-	int cnt;
-};
 struct InterCode_
 {
     InterCode prev,next;
@@ -207,8 +209,13 @@ struct InterCode_
        struct{ICVariable op1; int sz;} dec;
        struct{char* funcname;} fundec;
        struct{ICVariable op1; char* funcname;} funcall;
-       struct{ICVariable op1,op2,op3; enum{EQ_,LE_,GE_,LEQ_,GEQ_,NEQ_} relop;} ig;
+       struct{ICVariable op1,op2,op3; enum{LE_,GE_,GEQ_,LEQ_,EQ_,NEQ_} relop;} ig;
     }u;
-    int codesize;
 };
-
+ICVariable newvariable();
+ICVariable newtemp();
+ICVariable newlabel();
+ICVariable direct_number(int d);
+ICVariable find_icv(char *name);
+void print_ICVariable(ICVariable v);
+void print_intermediate_code(InterCode ic);

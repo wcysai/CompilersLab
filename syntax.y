@@ -333,6 +333,8 @@ int main(int argc, char** argv)
     {
         funcinit();
         semantic_analysis(root);
+        ICVariable v=find_icv("n");
+        print_ICVariable(v);
     }
 }
 

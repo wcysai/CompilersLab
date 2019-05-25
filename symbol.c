@@ -48,6 +48,7 @@ bool trieinsert(Symbol sym)
         }
     }
     bool f=(s->sym==NULL); //return true if no replacement happened
+    if(f) s->icv=newvariable();
     s->sym=sym;
     return f;
 }
@@ -91,4 +92,16 @@ bool triedelete(Symbol sym)
     if(s->sym==NULL) return false;
     s->sym=NULL;
     return true;
+}
+ICVariable find_icv(char *name)
+{
+    Trie s=var;
+    char *x=name;
+    for(int i=0;x[i];i++)
+    {
+        int id=find_id(x[i]);
+        if(s->next[id]) {s=s->next[id];}
+        else return NULL;
+    }
+    return s->icv;
 }
