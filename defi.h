@@ -224,3 +224,5 @@ void print_intermediate_code(InterCode ic);
 InterCode bind_code(InterCode code1,InterCode code2);
 InterCode translate_Exp(ast node,ICVariable v);
 InterCode translate_Cond(ast node,ICVariable label_true,ICVariable label_false);
+InterCode translate_Stmt(ast node);
+InterCode translate_Args(ast node);
