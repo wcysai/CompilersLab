@@ -1720,7 +1720,7 @@ yyreduce:
 #line 167 "./syntax.y" /* yacc.c:1646  */
     { //5
         (yyval)=newast("Stmt",5,(yyloc).first_line,"");
-        add_child((yyval),(yyvsp[-6])); add_sibling((yyvsp[-6]),(yyvsp[-5])); add_sibling((yyvsp[-5]),(yyvsp[-4])); add_sibling((yyvsp[-4]),(yyvsp[-3])); add_sibling((yyvsp[-3]),(yyvsp[-2])); add_child((yyvsp[-2]),(yyvsp[-1])); add_sibling((yyvsp[-1]),(yyvsp[0])); 
+        add_child((yyval),(yyvsp[-6])); add_sibling((yyvsp[-6]),(yyvsp[-5])); add_sibling((yyvsp[-5]),(yyvsp[-4])); add_sibling((yyvsp[-4]),(yyvsp[-3])); add_sibling((yyvsp[-3]),(yyvsp[-2])); add_sibling((yyvsp[-2]),(yyvsp[-1])); add_sibling((yyvsp[-1]),(yyvsp[0])); 
     }
 #line 1726 "./syntax.tab.c" /* yacc.c:1646  */
     break;
@@ -2277,8 +2277,9 @@ int main(int argc, char** argv)
     {
         funcinit();
         semantic_analysis(root);
-        ICVariable v=find_icv("n");
-        print_ICVariable(v);
+        InterCode IC=translate_Program(root);
+        if(argc>2) freopen(argv[2],"w",stdout);
+        print_intermediate_program(IC);
     }
 }
 

@@ -1,0 +1,3 @@
+FUNCTION main :
+t1 := #0
+RETURN t1

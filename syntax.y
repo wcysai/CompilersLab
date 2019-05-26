@@ -166,7 +166,7 @@ Stmt: Exp SEMI { //1
     }
     | IF LP Exp RP Stmt ELSE Stmt { //5
         $$=newast("Stmt",5,@$.first_line,"");
-        add_child($$,$1); add_sibling($1,$2); add_sibling($2,$3); add_sibling($3,$4); add_sibling($4,$5); add_child($5,$6); add_sibling($6,$7); 
+        add_child($$,$1); add_sibling($1,$2); add_sibling($2,$3); add_sibling($3,$4); add_sibling($4,$5); add_sibling($5,$6); add_sibling($6,$7); 
     }
     | WHILE LP Exp RP Stmt{ // 6
         $$=newast("Stmt",6,@$.first_line,"");
@@ -333,8 +333,9 @@ int main(int argc, char** argv)
     {
         funcinit();
         semantic_analysis(root);
-        ICVariable v=find_icv("n");
-        print_ICVariable(v);
+        InterCode IC=translate_Program(root);
+        if(argc>2) freopen(argv[2],"w",stdout);
+        print_intermediate_program(IC);
     }
 }
 

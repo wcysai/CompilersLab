@@ -35,10 +35,10 @@ ICVariable newvariable()
 }
 ICVariable newtemp()
 {
-    labelcnt++;
+    tempcnt++;
     ICVariable v=malloc(sizeof(struct ICVariable_));
-    v->kind=LAB;
-    v->cnt=variablecnt;
+    v->kind=TEMP;
+    v->cnt=tempcnt;
     return v;
 }
 ICVariable newlabel()
@@ -212,7 +212,7 @@ void print_intermediate_code(InterCode ic)
             if(ic->u.dec.op1==NULL) return;
             printf("DEC ");
             print_ICVariable(ic->u.dec.op1);
-            printf(" [%d] ",ic->u.dec.sz);
+            printf(" %d ",ic->u.dec.sz);
             printf("\n");
             break;
         }
@@ -226,7 +226,7 @@ void print_intermediate_code(InterCode ic)
         }
         case CALL:
         {
-            if(ic->u.funcall.op1==NULL) return;
+            if(ic->u.funcall.op1==NULL) ic->u.funcall.op1=newtemp();
             print_ICVariable(ic->u.funcall.op1);
             printf(" := CALL %s\n",ic->u.funcall.funcname);
             break;
@@ -329,13 +329,22 @@ InterCode translate_Exp(ast node,ICVariable v)
         }
         case 4:
         {
-            ICVariable t1=newtemp(),t2=newtemp();
-            InterCode code1=translate_Exp(p1(node),t1);
-            InterCode code2=translate_Exp(p3(node),t2);
-            InterCode code3=newcode();
-            code3->kind=ASSIGN;
-            code3->u.binary.op1=t1; code2->u.binary.op2=t2;
-            return bind_code3(code1,code2,code3);
+            if(p1(node)->opnum==1)
+            {
+                ICVariable v2=find_icv(p1(p1(node))->nodename);
+                ICVariable t1=newtemp();
+                InterCode code1=translate_Exp(p3(node),t1);
+                InterCode code2=newcode(),code3=newcode();
+                code2->kind=ASSIGN;
+                code2->u.binary.op1=v2; code2->u.binary.op2=t1;
+                code3->kind=ASSIGN;
+                code3->u.binary.op1=v; code3->u.binary.op2=v2;
+                return bind_code3(code1,code2,code3);
+            }
+            else
+            {
+                ;
+            }
         }
         case 5:
         case 6:
@@ -352,7 +361,7 @@ InterCode translate_Exp(ast node,ICVariable v)
             code0->kind=ASSIGN;
             code0->u.binary.op1=v; code0->u.binary.op2=direct_number(0);
             code3->kind=ASSIGN;
-            code3->u.binary.op1=v; code0->u.binary.op2=direct_number(1);
+            code3->u.binary.op1=v; code3->u.binary.op2=direct_number(1);
             code2=bind_code(code2,code3);
             code3=newLABEL(label2); 
             InterCode code1=translate_Cond(node,label1,label2);
@@ -437,17 +446,19 @@ InterCode translate_Exp(ast node,ICVariable v)
         }
         case 20:
         {
-            InterCode code1=translate_Args(p3(node));
             char* name=extract_name(p1(node));
             if(!strcmp(name,"write"))
             {
                 InterCode code2=newcode();
                 code2->kind=WRITE;
-                code2->u.unary.op1=v;
+                ICVariable t1=newtemp();
+                InterCode code1=translate_Exp(p1(p3(node)),t1);
+                code2->u.unary.op1=t1;
                 return bind_code(code1,code2);
             }
             else
             {
+                InterCode code1=translate_Args(p3(node));
                 InterCode code2=newcode();
                 code2->kind=CALL;
                 code2->u.funcall.op1=v; code2->u.funcall.funcname=name;
@@ -523,7 +534,7 @@ InterCode translate_Stmt(ast node)
         }
         case 2:
         {
-
+            return translate_CompSt(p1(node));
         }
         case 3:
         {
@@ -569,14 +580,14 @@ InterCode translate_Args(ast node)
 {
     switch(node->opnum)
     {
-        case 1:
+        case 2:
         {
             ICVariable t1=newtemp();
             InterCode code1=translate_Exp(p1(node),t1);
             InterCode code2=newARG(t1);
             return bind_code(code1,code2);
         }
-        case 2:
+        case 1:
         {
             ICVariable t1=newtemp();
             InterCode code1=translate_Exp(p1(node),t1);
@@ -642,8 +653,8 @@ InterCode translate_Dec(ast node)
             InterCode code2=translate_Exp(p3(node),t2);
             InterCode code3=newcode();
             code3->kind=ASSIGN;
-            code3->u.binary.op1=t1; code2->u.binary.op2=t2;
-            return bind_code3(code1,code2,code3);
+            code3->u.binary.op1=t1; code3->u.binary.op2=t2;
+            return bind_code3(code1,code2,code3); 
         }
     }
 }
@@ -682,11 +693,84 @@ InterCode translate_DefList(ast node)
 }
 InterCode translate_CompSt(ast node)
 {
-    
+    InterCode code1=translate_DefList(p2(node));
+    InterCode code2=translate_StmtList(p3(node));
+    return bind_code(code1,code2);
+}
+InterCode translate_ExtDecList(ast node)
+{
+    switch(node->opnum)
+    {
+        case 1: return translate_VarDec(p1(node),NULL);
+        case 2: 
+        {
+            InterCode code1=translate_VarDec(p1(node),NULL);
+            InterCode code2=translate_ExtDecList(p3(node));
+            return bind_code(code1,code2);
+        }
+    }
+}
+InterCode translate_ParamDec(ast node)
+{
+    char* name=extract_name(p1(p2(node)));
+    ICVariable v2=find_icv(name);
+    InterCode code=newcode();
+    code->kind=PARAM;
+    code->u.unary.op1=v2; 
+    return code;
+}
+InterCode translate_VarList(ast node)
+{
+    switch(node->opnum)
+    {
+        case 1:
+        {
+            InterCode code1=translate_ParamDec(p1(node));
+            InterCode code2=translate_VarList(p3(node));
+            return bind_code(code1,code2);
+        }
+        case 2: return translate_ParamDec(p1(node));
+    }
+}
+InterCode translate_FunDec(ast node)
+{
+    switch(node->opnum)
+    {
+        case 1:
+        {
+            InterCode code1=newcode();
+            code1->kind=FUNC;
+            char* name=extract_name(p1(node));
+            code1->u.fundec.funcname=name;
+            InterCode code2=translate_VarList(p3(node));
+            return bind_code(code1,code2);
+        }
+        case 2:
+        {
+            InterCode code1=newcode();
+            code1->kind=FUNC;
+            char* name=extract_name(p1(node));
+            code1->u.fundec.funcname=name;
+            return code1;
+        }
+    }
 }
 InterCode translate_ExtDef(ast node)
 {
-
+    switch(node->opnum)
+    {
+        case 1: 
+        {
+            return translate_ExtDecList(p2(node));
+        }
+        case 3:
+        {
+            InterCode code1=translate_FunDec(p2(node));
+            InterCode code2=translate_CompSt(p3(node));
+            return bind_code(code1,code2);
+        }
+        default: return NULL;
+    }
 }
 InterCode translate_ExtDefList(ast node)
 {
@@ -694,7 +778,7 @@ InterCode translate_ExtDefList(ast node)
     {
         case 1: 
         {
-            InterCode code1=translate_ExfDef(p1(node));
+            InterCode code1=translate_ExtDef(p1(node));
             InterCode code2=translate_ExtDefList(p2(node));
             return bind_code(code1,code2);
         }
