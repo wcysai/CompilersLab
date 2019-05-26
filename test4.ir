@@ -1,0 +1,34 @@
+FUNCTION func :
+PARAM v4
+t1 := v4
+t2 := #0
+IF t1 == t2 GOTO label1
+GOTO label2
+LABEL label1 :
+t3 := #1
+RETURN t3
+LABEL label2 :
+t7 := v4
+t8 := #1
+t6 := t7 - t8
+ARG t6
+t5 := CALL func
+t4 := #0 - t5
+RETURN t4
+FUNCTION main :
+DEC v6 40 
+t9 := #15
+t10 := &v6
+t11 := #1 * #4
+t10 := t10 + t11
+*t10 := t9
+t14 := v6
+t15 := #1
+t16 := #4 * t15
+t14 := t14 + t16
+t13 := *t14
+ARG t13
+t12 := CALL func
+WRITE t12
+t17 := #0
+RETURN t17

@@ -343,7 +343,23 @@ InterCode translate_Exp(ast node,ICVariable v)
             }
             else
             {
-                ;
+                ICVariable v2=find_icv(p1(p1(p1(node)))->nodename);
+                ICVariable t1=newtemp(),t2=newtemp(),t3=newtemp();
+                InterCode code1=translate_Exp(p3(node),t1);
+                InterCode code2=newcode(),code3=newcode(),code4=newcode(),code5=newcode(),code6=newcode();
+                int d=p1(p3(p1(node)))->val.intval;
+                code2->kind=ADDR;
+                code2->u.binary.op1=t2; code2->u.binary.op2=v2;
+                code3->kind=MUL;
+                code3->u.ternary.op1=t3; code3->u.ternary.op2=direct_number(d); code3->u.ternary.op3=direct_number(4);
+                code4->kind=ADD;
+                code4->u.ternary.op1=t2; code4->u.ternary.op2=t2; code4->u.ternary.op3=t3;
+                code5->kind=LVAL;
+                code5->u.binary.op1=t2; code5->u.binary.op2=t1; 
+                code6->kind=RVAL;
+                code6->u.binary.op1=v; code6->u.binary.op2=t2;
+                code1=bind_code4(code1,code2,code3,code4);
+                return bind_code3(code1,code5,code6);
             }
         }
         case 5:
@@ -470,13 +486,15 @@ InterCode translate_Exp(ast node,ICVariable v)
             ICVariable t1=newtemp(),t2=newtemp(),t3=newtemp();
             InterCode code1=translate_Exp(p1(node),t1);
             InterCode code2=translate_Exp(p3(node),t2);
-            InterCode code3=newcode();
+            InterCode code3=newcode(),code4=newcode(),code5=newcode();
             code3->kind=MUL;
             code3->u.ternary.op1=t3; code3->u.ternary.op2=direct_number(4); code3->u.ternary.op3=t2;
-            InterCode code4=newcode();
             code4->kind=ADD;
-            code4->u.ternary.op1=v; code4->u.ternary.op2=t1; code4->u.ternary.op3=t3;
-            return bind_code4(code1,code2,code3,code4);
+            code4->u.ternary.op1=t1; code4->u.ternary.op2=t1; code4->u.ternary.op3=t3;
+            code5->kind=RVAL;
+            code5->u.binary.op1=v; code5->u.binary.op2=t1; 
+            code1=bind_code3(code1,code2,code3);
+            return bind_code3(code1,code4,code5);
         }
         default: return NULL;
     }
