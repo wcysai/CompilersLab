@@ -483,8 +483,11 @@ InterCode translate_Exp(ast node,ICVariable v)
         }
         case 22:
         {
+            ICVariable v2=find_icv(p1(p1(node))->nodename);
             ICVariable t1=newtemp(),t2=newtemp(),t3=newtemp();
-            InterCode code1=translate_Exp(p1(node),t1);
+            InterCode code1=newcode();
+            code1->kind=ADDR;
+            code1->u.binary.op1=t1; code1->u.binary.op2=v2;
             InterCode code2=translate_Exp(p3(node),t2);
             InterCode code3=newcode(),code4=newcode(),code5=newcode();
             code3->kind=MUL;
