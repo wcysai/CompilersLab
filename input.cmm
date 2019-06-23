@@ -1,7 +1,0 @@
-int main()
-{
-    int n;
-    n=read();
-    if(n>0) write(1); else write(2);
-    return 0;
-}

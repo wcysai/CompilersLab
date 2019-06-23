@@ -8,6 +8,8 @@
 #define p6(x) x->child->sibling->sibling->sibling->sibling->sibling
 #define p7(x) x->child->sibling->sibling->sibling->sibling->sibling->sibling
 #define RELOPMAGIC 7
+typedef long long ll;
+typedef unsigned long long ull;
 extern int yylineno;
 int yyerror(const char *msg);
 typedef struct ast_* ast;
@@ -196,9 +198,30 @@ void expression_semantic_analysis(ast node);
 void semantic_analysis(ast node);
 void return_analysis(ast node);
 
+//const int MAXVARIABLECNT=512;
+//const int BITSIZE=64;
+
+#define MAXVARIABLECNT  512
+#define BITSIZE 64
+
+struct bitset_
+{
+    ull d[MAXVARIABLECNT/BITSIZE];
+};
+
+typedef struct bitset_* bitset;
+void setbit(bitset bs,int x);
+void erasebit(bitset bs,int x);
+void flipbit(bitset bs,int x);
+bool testbit(bitset bs,int x);
+void resetbit(bitset bs);
+void unite(bitset x,bitset y);
+void intersect(bitset x,bitset y);
+
+
 //IR functions
 void funcinit();
-typedef struct InterCode_ * InterCode;
+typedef struct InterCode_ *InterCode;
 struct InterCode_
 {
     InterCode prev,next;
@@ -213,7 +236,11 @@ struct InterCode_
        struct{ICVariable op1; char* funcname;} funcall;
        struct{ICVariable op1,op2,op3; enum{LE_,GE_,GEQ_,LEQ_,EQ_,NEQ_} relop;} ig;
     }u;
-};
+    int succnt;
+    InterCode succ1,succ2;
+    bitset _in,_out,_def,_use;
+    int id;
+} ;
 ICVariable newvariable();
 ICVariable newtemp();
 ICVariable newlabel();

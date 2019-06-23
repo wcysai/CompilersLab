@@ -1,0 +1,14 @@
+int  work(int a, int b, int c, int d, int e, int f) {
+    write(a);
+    write(b);
+    write(c);
+    write(d);
+    write(e);
+    write(f);
+    if (a >= b && a >= c && a >= d && a >=e && a >= f) return 0;
+    work(b, c, d, e, f, a);
+}
+int main() {
+    work(1, 2, 3, 4, 5, 6);
+    return 0;
+}
