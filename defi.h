@@ -218,7 +218,6 @@ void resetbit(bitset bs);
 void unite(bitset x,bitset y);
 void intersect(bitset x,bitset y);
 
-
 //IR functions
 void funcinit();
 typedef struct InterCode_ *InterCode;
@@ -236,10 +235,8 @@ struct InterCode_
        struct{ICVariable op1; char* funcname;} funcall;
        struct{ICVariable op1,op2,op3; enum{LE_,GE_,GEQ_,LEQ_,EQ_,NEQ_} relop;} ig;
     }u;
-    int succnt;
-    InterCode succ1,succ2;
-    bitset _in,_out,_def,_use;
     int id;
+    bool isbasic;
 } ;
 ICVariable newvariable();
 ICVariable newtemp();
@@ -268,3 +265,5 @@ InterCode translate_ParamDec(ast node);
 InterCode translate_ExtDef(ast node);
 InterCode translate_ExtDefList(ast node);
 InterCode translate_Program(ast node);
+
+//Object Code Functions

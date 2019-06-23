@@ -3,6 +3,8 @@
 #include <stdarg.h>
 #include <assert.h>
 #include "defi.h"
+ICVariable labelpool[MAXVARIABLECNT];
+ICVariable variablepool[MAXVARIABLECNT];
 
 void funcinit()
 {
@@ -24,29 +26,31 @@ void funcinit()
     symwrite->u.func->args->tail=NULL;
     assert(trieinsert(symwrite));
 }
-int labelcnt=0,variablecnt=0,tempcnt=0;
+int labelcnt=0,variablecnt=0,tempcnt=0,totcnt=0;;
 ICVariable newvariable()
 {
-    variablecnt++;
     ICVariable v=malloc(sizeof(struct ICVariable_));
     v->kind=VAR;
     v->cnt=variablecnt;
+    variablecnt++;
+    variablepool[totcnt++]=v;
     return v;
 }
 ICVariable newtemp()
 {
-    tempcnt++;
     ICVariable v=malloc(sizeof(struct ICVariable_));
     v->kind=TEMP;
     v->cnt=tempcnt;
+    tempcnt++;
+    variablepool[totcnt++]=v;
     return v;
 }
 ICVariable newlabel()
 {
-    labelcnt++;
     ICVariable v=malloc(sizeof(struct ICVariable_));
     v->kind=LAB;
     v->cnt=labelcnt;
+    labelpool[labelcnt++]=v;
     return v;
 }
 ICVariable direct_number(int d)
