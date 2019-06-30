@@ -8,6 +8,7 @@
 #define p6(x) x->child->sibling->sibling->sibling->sibling->sibling
 #define p7(x) x->child->sibling->sibling->sibling->sibling->sibling->sibling
 #define RELOPMAGIC 7
+#define MAXNAMELEN 32
 typedef long long ll;
 typedef unsigned long long ull;
 extern int yylineno;
@@ -66,7 +67,7 @@ Type newfloat();
 
 struct FieldList_
 {
-    char* name; 
+    char name[MAXNAMELEN]; 
     Type type; 
     FieldList tail; 
 };
@@ -79,7 +80,7 @@ struct ArrayDec_
 
 struct Dec_
 {
-    char* name;
+    char name[MAXNAMELEN];
     ArrayDec array;
 };
 
@@ -91,21 +92,21 @@ struct DecList_
 
 struct DefList_
 {
-    char* name;
+    char name[MAXNAMELEN];
     Type type;
     DefList tail;
 };
 
 struct VarList_
 {
-    char* name;
+    char name[MAXNAMELEN];
     Type type;
     VarList tail;
 };
 
 struct FunDec_
 {
-    char* name;
+    char name[MAXNAMELEN];
     Type type;
     VarList args;
 };
@@ -118,6 +119,7 @@ struct ICVariable_
 {
 	enum{VAR,TEMP,LAB,DNUM} kind;
 	int cnt;
+    int id;
 };
 struct Symbol_
 {
@@ -231,8 +233,8 @@ struct InterCode_
        struct{ICVariable op1,op2; } binary;
        struct{ICVariable op1; } unary;
        struct{ICVariable op1; int sz;} dec;
-       struct{char* funcname;} fundec;
-       struct{ICVariable op1; char* funcname;} funcall;
+       struct{char funcname[MAXNAMELEN];} fundec;
+       struct{ICVariable op1; char funcname[MAXNAMELEN];} funcall;
        struct{ICVariable op1,op2,op3; enum{LE_,GE_,GEQ_,LEQ_,EQ_,NEQ_} relop;} ig;
     }u;
     int id;
@@ -266,4 +268,40 @@ InterCode translate_ExtDef(ast node);
 InterCode translate_ExtDefList(ast node);
 InterCode translate_Program(ast node);
 
+typedef struct MIPSOp_ *MIPSOp;
+struct MIPSOp_
+{
+    enum{MOP_LABEL,MOP_REG,MOP_STA,MOP_DNUM} kind;
+    union 
+    {
+        struct{char name[MAXNAMELEN]; int id;} label;
+        struct{int id;}reg;
+        struct{int reg_id; int offset;}sta;
+        struct{int val;}dnum;
+    }u; 
+};
+
+typedef struct MIPSCode_ *MIPSCode;
+struct MIPSCode_
+{
+    MIPSCode prev,next;
+    enum
+    {
+        MIPS_LABEL,MIPS_LI,MIPS_MOVE,MIPS_ADD0MIPS_SUB,MIPS_MUL,MIPS_DIV,MIPS_MFLO,MIPS_LA,
+        MIPS_LW,MIPS_SW,MIPS_J,MIPS_JAL,MIPS_JR,MIPS_BEQ,MIPS_BNE,MIPS_BGT,MIPS_BLT,MIPS_BGE,MIPS_BLE
+    }kind;
+    union
+    {
+       struct{MIPSOp op1,op2,op3; } ternary;
+       struct{MIPSOp op1,op2; } binary;
+       struct{MIPSOp op1; } unary;
+    }u;
+};
+
+
 //Object Code Functions
+MIPSCode newmipscode();
+MIPSCode bind_mipscode(MIPSCode code1,MIPSCode code2);
+MIPSCode bind_mipscode3(MIPSCode code1,MIPSCode code2,MIPSCode code3);
+MIPSCode bind_mipscode4(MIPSCode code1,MIPSCode code2,MIPSCode code3,MIPSCode code4);
+

@@ -1,0 +1,13 @@
+int f(int x,int y)
+{
+    return 1;
+}
+int main()
+{
+    int a,b,c;
+    a=read(); 
+    b=read();
+    c=f(a,b);
+    write(c);
+    return 0;
+}

@@ -1,28 +1,11 @@
+FUNCTION f :
+PARAM v3
+t0 := v3
+RETURN t0
 FUNCTION main :
-READ t0
-v3 := t0
-t1 := v3
-t2 := #0
-IF t1 > t2 GOTO label0
-GOTO label1
-LABEL label0 :
-t3 := #1
-WRITE t3
-GOTO label2
-LABEL label1 :
-t4 := v3
-t5 := #0
-IF t4 < t5 GOTO label3
-GOTO label4
-LABEL label3 :
-t7 := #1
-t6 := #0 - t7
-WRITE t6
-GOTO label5
-LABEL label4 :
-t8 := #0
-WRITE t8
-LABEL label5 :
-LABEL label2 :
-t9 := #0
-RETURN t9
+t2 := #1
+ARG t2
+t1 := CALL f
+WRITE t1
+t3 := #0
+RETURN t3

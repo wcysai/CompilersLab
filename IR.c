@@ -33,7 +33,9 @@ ICVariable newvariable()
     v->kind=VAR;
     v->cnt=variablecnt;
     variablecnt++;
-    variablepool[totcnt++]=v;
+    variablepool[totcnt]=v;
+    v->id=totcnt;
+    totcnt++;
     return v;
 }
 ICVariable newtemp()
@@ -42,7 +44,9 @@ ICVariable newtemp()
     v->kind=TEMP;
     v->cnt=tempcnt;
     tempcnt++;
-    variablepool[totcnt++]=v;
+    variablepool[totcnt]=v;
+    v->id=totcnt;
+    totcnt++;
     return v;
 }
 ICVariable newlabel()
@@ -50,7 +54,9 @@ ICVariable newlabel()
     ICVariable v=malloc(sizeof(struct ICVariable_));
     v->kind=LAB;
     v->cnt=labelcnt;
-    labelpool[labelcnt++]=v;
+    labelpool[labelcnt]=v;
+    v->id=labelcnt;
+    labelcnt++;
     return v;
 }
 ICVariable direct_number(int d)
